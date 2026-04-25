@@ -1,0 +1,1 @@
+Proyecto en desarrollo: Sistema de gestión de inventario profesional con FastAPI y PostgreSQL. Actualmente cuenta con la base de datos configurada y CRUD de productos funcionando.
