@@ -15,3 +15,23 @@ class ProductResponse(ProductCreate):
     updated_at: datetime 
 
 model_config = ConfigDict(from_attributes=True)
+
+class DashboardSummary(BaseModel):
+    total_products: int
+    total_stock_items: int
+    total_inventory_value: float
+    low_stock_count: int
+
+class UserCreate(BaseModel):
+    username: str
+    password: str
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
