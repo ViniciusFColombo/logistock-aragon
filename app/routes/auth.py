@@ -6,6 +6,8 @@ from .. import models, schemas
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
+import os
+from dotenv import load_dotenv
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -13,8 +15,10 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
-SECRET_KEY = "your_super_secure_secret_key_here"
-ALGORITHM = "HS256"
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
+ALGORITHM = os.getenv("ALGORITHM")
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):

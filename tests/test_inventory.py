@@ -1,0 +1,89 @@
+import pytest
+
+async def test_create_product_success(client):
+    product_data = {
+        "name": "mechanical keyboard",
+        "sku": "MEC-001",
+        "category": "Peripherals",
+        "price": 250.0,
+        "stock_quantity": 15
+    }
+
+    response = await client.post("/products/", json=product_data)
+
+    assert response.status_code == 201
+    print(f"\nSucess! Status: {response.status_code}")
+
+async def test_create_product_duplicate_sku(client):
+    product_data = {
+        "name": "Base Product",
+        "sku": "DUPLICATE-001",
+        "category": "Tetst",
+        "price": 100.0,
+        "stock_quantity": 10
+    }
+    await client.post("/products/", json=product_data)
+    response = await client.post("/products/", json=product_data)
+
+    assert response.status_code == 400
+    assert "SKU already registred" in response.json()["detail"]
+    print("\nDuplicate SKU Test: PASSED")
+
+async def test_create_product_invalid_price(client):
+    invalid_data = {
+        "name": "Wrong Product Price",
+        "sku": "PRICE-001",
+        "category": "Tetst",
+        "price": -50.0, # *
+        "stock_quantity": 5
+    }
+
+    response = await client.post("/products/", json=invalid_data)
+
+    assert response.status_code in [400, 422]
+    print("\nNegative Price Test: PASSED")
+
+async def test_get_product_by_sku(client):
+    target_sku = "SEARCH-999"
+    product_data = {
+        "name": "Search Product",
+        "sku": target_sku,
+        "category": "Eletronic",
+        "price": 500.0,
+        "stock_quantity": 2
+    }
+    await client.post("/products/", json=product_data)
+
+    response = await client.get(f"/products/sku/{target_sku}")
+
+    assert response.status_code == 200
+    assert response.json()["sku"] == target_sku
+    assert response.json()["name"] == "Search Product"
+    print("\nSearch SKU Test: PASSED")
+
+async def test_low_stock_report(client):
+    low_stock_data = {
+        "name": "mechanical keyboard",
+        "sku": "LOW-001",
+        "category": "Test",
+        "price": 10.0,
+        "stock_quantity": 3
+    }
+    await client.post("/products/", json=low_stock_data)
+
+    response = await client.get("/products/low-stock")
+
+    assert response.status_code == 200
+    items = response.json()
+    assert any(item["sku"] == "LOW-001" for item in items)
+    print("\nLow Stock Test: PASSED")
+
+async def test_get_product_not_found(client):
+    random_sku = "NON-EXISTENT-122"
+    response = await client.get(f"/products/sku/{random_sku}")
+    
+    assert response.status_code == 404
+    assert f"Product with SKU '{random_sku}' not found." in response.json()["detail"]
+    print("\n Test 404 (Not Found): PASSED")
+
+

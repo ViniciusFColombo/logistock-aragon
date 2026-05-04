@@ -1,13 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from ..database import get_db
 from .. import models, schemas
 from .auth import get_current_user
 
 router = APIRouter(prefix="/products", tags=["Products Management"])
-
 
 @router.post("/", response_model=schemas.ProductResponse, status_code=status.HTTP_201_CREATED)
 def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db), token: str = Depends(get_current_user)):
@@ -22,8 +21,13 @@ def create_product(product: schemas.ProductCreate, db: Session = Depends(get_db)
     return new_product
 
 @router.get("/", response_model=List[schemas.ProductResponse])
-def list_products(db: Session = Depends(get_db)):
-    products = db.query(models.Product).all()
+def list_products(db: Session = Depends(get_db), skip: int = 0, limit: int = 10, search: Optional[str] = None):
+    query = db.query(models.Product)
+
+    if search:
+        query = query.filter(models.Product.name.contains(search))
+
+    products = query.offset(skip).limit(limit).all()
     return products
 
 @router.get("/low-stock", response_model=List[schemas.ProductResponse])
@@ -57,8 +61,18 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Product not found")
     return product
 
+@router.get("/sku/{sku_code}", response_model=schemas.ProductResponse)
+def get_product_by_sku(sku_code: str, db: Session = Depends(get_db)):
+    product = db.query(models.Product).filter(models.Product.sku == sku_code).first()
+    if not product:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Product with SKU '{sku_code}' not found."
+        )
+    return product
+
 @router.put("/{product_id}", response_model=schemas.ProductResponse)
-def update_product(product_id: int, product_data: schemas.ProductCreate, db: Session = Depends(get_db), token: str = Depends(get_current_user)):
+def update_product(product_id: int, product_data: schemas.ProductUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     db_product = db.query(models.Product).filter(models.Product.id == product_id).first()
 
     if not db_product:
@@ -73,7 +87,7 @@ def update_product(product_id: int, product_data: schemas.ProductCreate, db: Ses
     return db_product
 
 @router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_product(product_id: int, db: Session = Depends(get_db), token: str = Depends(get_current_user)):
+def delete_product(product_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     db_product = db.query(models.Product).filter(models.Product.id == product_id).first()
 
     if not db_product:
