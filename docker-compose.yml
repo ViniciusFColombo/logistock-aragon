@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      - POSTGRES_USER=usuario_aragon
+      - POSTGRES_PASSWORD=senha_segura
+      - POSTGRES_DB=logistock_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://usuario_aragon:senha_segura@db:5432/logistock_db
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
