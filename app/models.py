@@ -1,5 +1,7 @@
-from sqlalchemy import Column, Integer, String, Float, DateTime
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Enum
 from datetime import datetime, timezone
+from sqlalchemy.sql import func
+from .constants import MovementType
 from .database import Base
 
 class Product(Base):
@@ -21,3 +23,11 @@ class User(Base):
     username = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     
+class StockMovement(Base):
+    __tablename__ = "stock_movements"
+
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    quantity = Column(Integer, nullable=False)
+    movement_type = Column(Enum(MovementType), nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())

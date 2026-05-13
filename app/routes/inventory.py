@@ -71,6 +71,27 @@ def get_product_by_sku(sku_code: str, db: Session = Depends(get_db)):
         )
     return product
 
+@router.post("/trasaction", response_model=schemas.StockMovementResponse)
+def create_stock_transaction(transaction: schemas.StockMovementCreate, db: Session = Depends(get_db)):
+    product = db.query(models.Product).filter(models.Product.id == transaction.product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    if transaction.movement_type == models.MovementType.OUT:
+        if product.stock_quantity < transaction.quantity:
+            raise HTTPException(status_code=400, detail=f"Insufficient stock. Available: {product.stock_quantity}")
+        
+        product.stock_quantity -= transaction.quantity
+    else:
+        product.stock_quantity += transaction.quantity
+    
+    new_movement = models.StockMovement(product_id=transaction.product_id, quantity=transaction.quantity, movement_type=transaction.movement_type)
+    db.add(new_movement)
+    db.commit()
+    db.refresh(new_movement)
+
+    return new_movement
+
 @router.put("/{product_id}", response_model=schemas.ProductResponse)
 def update_product(product_id: int, product_data: schemas.ProductUpdate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     db_product = db.query(models.Product).filter(models.Product.id == product_id).first()

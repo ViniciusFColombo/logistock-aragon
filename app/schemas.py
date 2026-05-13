@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
+from .constants import MovementType
 
 # PRODUCTS
 
@@ -49,3 +50,20 @@ class DashboardSummary(BaseModel):
     total_stock_items: int
     total_inventory_value: float
     low_stock_count: int
+
+# IN / OUT
+
+class StockMovementCreate(BaseModel):
+    product_id: int
+    quantity: int = Field(..., gt=0, description="The quantity must be greater than zero.")
+    movement_type: MovementType
+
+class StockMovementResponse(BaseModel):
+    id: int
+    product_id: int
+    quantity: int
+    movement_type: MovementType
+    created_at: datetime
+
+class Config:
+    from_attributes = True

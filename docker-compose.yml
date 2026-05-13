@@ -2,10 +2,8 @@ services:
   db:
     image: postgres:15
     restart: always
-    environment:
-      - POSTGRES_USER=usuario_aragon
-      - POSTGRES_PASSWORD=senha_segura
-      - POSTGRES_DB=logistock_db
+    env_file:
+      - .env
     ports:
       - "5432:5432"
     volumes:
@@ -17,8 +15,8 @@ services:
       - .:/app
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://usuario_aragon:senha_segura@db:5432/logistock_db
+    env_file:
+      - .env
     depends_on:
       - db
 
