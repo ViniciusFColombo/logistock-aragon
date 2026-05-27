@@ -1,5 +1,5 @@
 import pytest
-from app.constants import MovementType  # Importado direto das suas constantes para o Pydantic aceitar
+from app.constants import MovementType 
 
 async def test_create_product_success(client):
     product_data = {
@@ -70,7 +70,6 @@ async def test_get_product_not_found(client):
     assert response.status_code == 404
 
 async def test_stock_movement_out_success(client):
-    """Testa o registro de uma movimentação de saída limpando estados residuais."""
     product_data = {
         "name": "Mouse Gamer",
         "sku": "MSE-999",
@@ -91,7 +90,6 @@ async def test_stock_movement_out_success(client):
     assert response.status_code == 200
 
 async def test_stock_runway_calculation_success(client):
-    """Testa a análise do Pandas garantindo dados prévios de movimentação."""
     product_data = {
         "name": "Cabo HDMI",
         "sku": "HDMI-001",
@@ -105,7 +103,7 @@ async def test_stock_runway_calculation_success(client):
     movement_payload = {
         "product_id": int(product_id),
         "quantity": 2,
-        "movement_type": "out"  # Alterado para minúsculo aqui também
+        "movement_type": "out"
     }
     await client.post("/products/trasaction", json=movement_payload)
 
