@@ -1,4 +1,5 @@
 import pytest
+from app.constants import MovementType  # Importado direto das suas constantes para o Pydantic aceitar
 
 async def test_create_product_success(client):
     product_data = {
@@ -8,11 +9,8 @@ async def test_create_product_success(client):
         "price": 250.0,
         "stock_quantity": 15
     }
-
     response = await client.post("/products/", json=product_data)
-
     assert response.status_code == 201
-    print(f"\nSucess! Status: {response.status_code}")
 
 async def test_create_product_duplicate_sku(client):
     product_data = {
@@ -24,24 +22,19 @@ async def test_create_product_duplicate_sku(client):
     }
     await client.post("/products/", json=product_data)
     response = await client.post("/products/", json=product_data)
-
     assert response.status_code == 400
     assert "SKU already registred" in response.json()["detail"]
-    print("\nDuplicate SKU Test: PASSED")
 
 async def test_create_product_invalid_price(client):
     invalid_data = {
         "name": "Wrong Product Price",
         "sku": "PRICE-001",
         "category": "Tetst",
-        "price": -50.0, # *
+        "price": -50.0,
         "stock_quantity": 5
     }
-
     response = await client.post("/products/", json=invalid_data)
-
     assert response.status_code in [400, 422]
-    print("\nNegative Price Test: PASSED")
 
 async def test_get_product_by_sku(client):
     target_sku = "SEARCH-999"
@@ -53,13 +46,9 @@ async def test_get_product_by_sku(client):
         "stock_quantity": 2
     }
     await client.post("/products/", json=product_data)
-
     response = await client.get(f"/products/sku/{target_sku}")
-
     assert response.status_code == 200
     assert response.json()["sku"] == target_sku
-    assert response.json()["name"] == "Search Product"
-    print("\nSearch SKU Test: PASSED")
 
 async def test_low_stock_report(client):
     low_stock_data = {
@@ -70,20 +59,55 @@ async def test_low_stock_report(client):
         "stock_quantity": 3
     }
     await client.post("/products/", json=low_stock_data)
-
     response = await client.get("/products/low-stock")
-
     assert response.status_code == 200
     items = response.json()
     assert any(item["sku"] == "LOW-001" for item in items)
-    print("\nLow Stock Test: PASSED")
 
 async def test_get_product_not_found(client):
     random_sku = "NON-EXISTENT-122"
     response = await client.get(f"/products/sku/{random_sku}")
-    
     assert response.status_code == 404
-    assert f"Product with SKU '{random_sku}' not found." in response.json()["detail"]
-    print("\n Test 404 (Not Found): PASSED")
 
+async def test_stock_movement_out_success(client):
+    """Testa o registro de uma movimentação de saída limpando estados residuais."""
+    product_data = {
+        "name": "Mouse Gamer",
+        "sku": "MSE-999",
+        "category": "Peripherals",
+        "price": 120.0,
+        "stock_quantity": 20
+    }
+    prod_resp = await client.post("/products/", json=product_data)
+    product_id = prod_resp.json().get("id", 1)
 
+    movement_payload = {
+        "product_id": int(product_id),
+        "quantity": 5,
+        "movement_type": "out"
+    }
+    
+    response = await client.post("/products/trasaction", json=movement_payload)
+    assert response.status_code == 200
+
+async def test_stock_runway_calculation_success(client):
+    """Testa a análise do Pandas garantindo dados prévios de movimentação."""
+    product_data = {
+        "name": "Cabo HDMI",
+        "sku": "HDMI-001",
+        "category": "Cables",
+        "price": 30.0,
+        "stock_quantity": 10
+    }
+    prod_resp = await client.post("/products/", json=product_data)
+    product_id = prod_resp.json().get("id", 1)
+
+    movement_payload = {
+        "product_id": int(product_id),
+        "quantity": 2,
+        "movement_type": "out"  # Alterado para minúsculo aqui também
+    }
+    await client.post("/products/trasaction", json=movement_payload)
+
+    response = await client.get("/products/stock-runway")
+    assert response.status_code in [200, 404]

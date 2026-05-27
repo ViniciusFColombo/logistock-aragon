@@ -5,7 +5,11 @@ from app.database import Base, get_db
 from app.main import app
 from app.routes.auth import get_current_user
 from httpx import AsyncClient, ASGITransport
+import os
 
+os.environ["SECRECT_KEY"] = "chave_de_teste_com_o_erro_de_grafia_do_seu_service_123"
+os.environ["SECRET_KEY"] = "chave_de_teste_com_o_erro_de_grafia_do_seu_service_123"
+os.environ["ALGORITHM"] = "HS256"
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
