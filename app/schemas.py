@@ -1,4 +1,5 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, StringConstraints
+from typing import Annotated
 from typing import Optional
 from datetime import datetime
 from .constants import MovementType
@@ -67,3 +68,14 @@ class StockMovementResponse(BaseModel):
 
 class Config:
     from_attributes = True
+
+#AGENT
+
+class AgentQueryRequest(BaseModel):
+    query: Annotated[
+        str, 
+        StringConstraints(strip_whitespace=True, min_length=3, max_length=250)
+    ] = Field(
+        ...,
+        description="The question or prompt sent by the user to the AI logistics agent."
+    )

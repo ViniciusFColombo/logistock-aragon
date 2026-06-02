@@ -2,7 +2,7 @@ import time
 from fastapi import FastAPI
 from .database import engine
 from . import models
-from .routes import inventory, auth
+from .routes import inventory, auth, agent
 
 app= FastAPI(title="LogiStock Aragón - LogiStock Aragón - Inventory Management")
 
@@ -24,6 +24,7 @@ create_tables()
 
 app.include_router(auth.router)
 app.include_router(inventory.router)
+app.include_router(agent.router)
 
 @app.get("/")
 def home():
