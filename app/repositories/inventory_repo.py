@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, text
 from typing import List, Optional
 from app import models, schemas
 
@@ -106,3 +106,13 @@ class InventoryRepository:
     def get_all_movements(db: Session) -> List[models.StockMovement]:
         """Searches the entire history of stock movements."""
         return db.query(models.StockMovement).all()
+    
+    @staticmethod
+    def get_product_sales_history(product_id: int, db: Session):
+        query = text("""
+            SELECT quantity, created_at 
+            FROM stock_movements 
+            WHERE product_id = :product_id AND movement_type = 'OUT'
+            ORDER BY created_at ASC
+        """)
+        return db.execute(query, {"product_id": product_id}).fetchall()
