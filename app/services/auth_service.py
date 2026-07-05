@@ -9,7 +9,8 @@ from app import models, schemas
 from app.repositories.auth_repo import AuthRepository
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/signin")
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
@@ -41,28 +42,41 @@ class AuthService:
     
     @staticmethod
     def signup_user(db: Session, user_data: schemas.UserCreate) -> models.User:
-        existing_user = AuthRepository.get_user_by_username(db, user_data.username)
+        # Buscando pelo novo campo de e-mail
+        existing_user = AuthRepository.get_user_by_email(db, user_data.email)
         if existing_user:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Username already registred"
+                detail="Email already registered"
             )
         
-        #The service calculates the hash here, isolating the persistence rule.
         hashed_pwd = AuthService.get_password_hash(user_data.password)
-        return AuthRepository.create_user(db, user_data.username, hashed_pwd)
+        return AuthRepository.create_user(db, user_data, hashed_pwd)
     
     @staticmethod
     def signin_user(db: Session, form_data) -> dict:
-        user = AuthRepository.get_user_by_username(db, form_data.username)
+        user = AuthRepository.get_user_by_email(db, form_data.username)
+        
         if not user or not AuthService.verify_password(form_data.password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect username or password",
+                detail="Incorrect email or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
         
-        access_token = AuthService.create_access_token(data={"sub": user.username})
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="User account is deactivated"
+            )
+        
+        access_token = AuthService.create_access_token(
+            data={
+                "sub": user.email,
+                "role": user.role.value,
+                "requires_password_change": user.requires_password_change
+            }
+        )
         return {"access_token": access_token, "token_type": "bearer"}
     
     @staticmethod
@@ -75,15 +89,37 @@ class AuthService:
         )
 
         try:
-            payload= jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username: str = payload.get("sub")
-            if username is None:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            email: str = payload.get("sub")
+            if email is None:
                 raise credentials_exception
         except JWTError:
             raise credentials_exception
         
-        user = AuthRepository.get_user_by_username(db, username)
+        user = AuthRepository.get_user_by_email(db, email)
         if user is None:
             raise credentials_exception
+            
+        if not user.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="User account is deactivated"
+            )
         
         return user
+    
+    @staticmethod
+    def change_user_password(db: Session, current_user: models.User, payload: schemas.PasswordChangeRequest) -> None:
+        """
+        Business Rule: Validates that the current password matches and 
+        delegates the persistence of the new hash to the authentication repository.
+        """
+        if not AuthService.verify_password(payload.current_password, current_user.hashed_password):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="A senha atual está incorreta."
+            )
+        
+        new_hash = AuthService.get_password_hash(payload.new_password)
+        
+        AuthRepository.update_user_password(db, current_user, new_hash)

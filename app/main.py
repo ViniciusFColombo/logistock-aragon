@@ -1,10 +1,26 @@
 import time
+import os
 from fastapi import FastAPI
 from .database import engine
 from . import models
 from .routes import inventory, auth, agent
+from fastapi.middleware.cors import CORSMiddleware
 
 app= FastAPI(title="LogiStock Aragón - LogiStock Aragón - Inventory Management")
+
+raw_origins = os.getenv("ALLOWED_ORIGINS")
+
+# We convert the string into a list by splitting it at the commas
+# (This allows you to add multiple sites in the future, e.g., site1.com,site2.com)
+origins = [origin.strip() for origin in raw_origins.split(",")]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,            # Allows only requests coming from our frontend.
+    allow_credentials=True,           # Allows sending of authentication cookies/tokens.
+    allow_methods=["*"],              # Allows all HTTP methods (POST, GET, PUT, DELETE).
+    allow_headers=["*"],              # Allows all custom HTTP headers.
+)
 
 def create_tables():
     retries = 5

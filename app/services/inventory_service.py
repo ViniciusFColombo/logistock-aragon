@@ -18,7 +18,7 @@ class InventoryService:
         if existing_product:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="SKU already registred"
+                detail="SKU already registered"
             )
         return InventoryRepository.create_product(db, product_data)
     
@@ -73,7 +73,6 @@ class InventoryService:
                 detail="Product not found"
             )
         
-        # We converted the update scheme into a dictionary.
         update_dict = product_data.model_dump(exclude_unset=True)
         return InventoryRepository.update_product(db, db_product, update_dict)
     
@@ -88,7 +87,8 @@ class InventoryService:
         InventoryRepository.delete_product(db, db_product)
         
     @staticmethod
-    def create_stock_transaction(db: Session, transaction: schemas.StockMovementCreate) -> models.StockMovement:
+    def create_stock_transaction(db: Session, transaction: schemas.StockMovementCreate, user_id: int) -> models.StockMovement:
+        """Validates the inventory business rule and injects the logged-in employee's user_id."""
         db_product = InventoryRepository.get_by_id(db, transaction.product_id)
         if not db_product:
             raise HTTPException(
@@ -96,31 +96,27 @@ class InventoryService:
                 detail="Product not found"
             )
         
-        # Business rule: Validate if there is sufficient stock for outbound (OUT) orders.
+        # Business Rule: Prevent outflow (OUT) if there is insufficient stock.
         if transaction.movement_type == models.MovementType.OUT:
             if db_product.stock_quantity < transaction.quantity:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=f"Insufficient stock. Available: {db_product.stock_quantity}"
                 )
-            # Update the object in memory (the atomic transaction from the repository will save it)
             db_product.stock_quantity -= transaction.quantity
         else:
             db_product.stock_quantity += transaction.quantity
 
         return InventoryRepository.create_movement(
-            db,
-            transaction.product_id,
-            transaction.quantity,
-            transaction.movement_type
+            db=db,
+            product_id=transaction.product_id,
+            user_id=user_id, 
+            quantity=transaction.quantity,
+            movement_type=transaction.movement_type
         )
     
     @staticmethod
     def get_stock_runway_prediction(db: Session) -> list:
-        """
-        Integrated Predictive Analytics: Calculates sales velocity (Pandas)
-        and projects remaining inventory days in isolation.
-        """
         products_list = InventoryRepository.list_products(db, limit=1000)
         movements_list = InventoryRepository.get_all_movements(db)
 
@@ -130,17 +126,14 @@ class InventoryService:
                 detail="Missing data to perform analysis."
             )
         
-        # We safely converted SQLAlchemy object lists into Pandas DataFrames.
         df_products = pd.DataFrame([p.__dict__ for p in products_list])
         df_movements = pd.DataFrame([m.__dict__ for m in movements_list])
 
-        # Cleans up internal SQLAlchemy references that Pandas doesn't need.
         if '_sa_instance_state' in df_products.columns:
             df_products = df_products.drop(columns=['_sa_instance_state'])
         if '_sa_instance_state' in df_movements.columns:
             df_movements = df_movements.drop(columns=['_sa_instance_state'])
 
-        # Secure temporal processing
         df_movements['created_at'] = pd.to_datetime(df_movements['created_at'], utc=True)
         now_utc = datetime.now(timezone.utc)
         thirty_days_ago = now_utc - timedelta(days=30)
@@ -156,7 +149,6 @@ class InventoryService:
             daily_avg = recent_sales.groupby(['product_id', recent_sales['created_at'].dt.date])['quantity'].sum()
             avg_sales_per_product = daily_avg.groupby('product_id').mean()
 
-        # Construction of the return payload
         predictions = []
         for _, product in df_products.iterrows():
             p_id = int(product['id'])    

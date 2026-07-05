@@ -55,40 +55,43 @@ class InventoryRepository:
     
     @staticmethod
     def create_product(db: Session, product_data: schemas.ProductCreate) -> models.Product:
-        """It creates a new product in an atomic and safe way."""
         new_product = models.Product(**product_data.model_dump())
-
-        if db.in_transaction():
+        try:
             db.add(new_product)
-            db.flush()
-        else:
-            with db.begin():
-                db.add(new_product)
-
-        db.refresh(new_product)
-        return new_product
+            db.commit()
+            db.refresh(new_product)
+            return new_product
+        except Exception as e:
+            db.rollback()
+            raise e
     
     @staticmethod
     def update_product(db: Session, db_product: models.Product, update_data: dict) -> models.Product:
-        """Updates existing product data using transactional security."""
-        with db.begin():
+        try:
             for key, value in update_data.items():
                 setattr(db_product, key, value)
-
-        db.refresh(db_product)
-        return db_product
+            db.commit()
+            db.refresh(db_product)
+            return db_product
+        except Exception as e:
+            db.rollback()
+            raise e
     
     @staticmethod
     def delete_product(db: Session, db_product: models.Product) -> None:
-        """Safely remove a product from the database."""
-        with db.begin():
+        try:
             db.delete(db_product)
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise e
 
     @staticmethod
-    def create_movement(db: Session, product_id: int, quantity: int, movement_type: str) -> models.StockMovement:
-        """Records a single stock movement (IN/OUT) in a transaction."""
+    def create_movement(db: Session, product_id: int, user_id: int, quantity: int, movement_type: str) -> models.StockMovement:
+        """Records a single stock movement (IN/OUT) with audit tracking in a transaction."""
         new_movement = models.StockMovement(
             product_id=product_id,
+            user_id=user_id,
             quantity=quantity,
             movement_type=movement_type
         )

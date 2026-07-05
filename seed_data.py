@@ -9,13 +9,19 @@ def seed():
     
     db = SessionLocal()
     try:
+        any_user = db.query(models.User).first()
+        
+        if not any_user:
+            print("Error: No users found in database! Create at least ONE user in Swagger first.")
+            return
+
         products = db.query(models.Product).all()
         
         if not products:
             print("Create at least one product in Swagger before running the script!")
             return
 
-        print(f"Generating historical data for {len(products)} products...")
+        print(f"Generating historical data for {len(products)} products using User ID: {any_user.id}...")
 
         for product in products:
             product.stock_quantity = 0
@@ -30,10 +36,15 @@ def seed():
                 if m_type == constants.MovementType.IN:
                     product.stock_quantity += qty
                 else:
-                    product.stock_quantity -= qty
+                    if product.stock_quantity - qty < 0:
+                        product.stock_quantity += qty
+                        m_type = constants.MovementType.IN
+                    else:
+                        product.stock_quantity -= qty
 
                 movement = models.StockMovement(
                     product_id=product.id,
+                    user_id=any_user.id,
                     quantity=qty,
                     movement_type=m_type,
                     created_at=date

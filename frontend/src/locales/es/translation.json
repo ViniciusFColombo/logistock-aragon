@@ -1,0 +1,57 @@
+{
+  "login": {
+    "title": "Iniciar sesión en LogiStock Aragón",
+    "subtitle": "Gestión de Stock Inteligente con IA",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "Introduce tu correo",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Introduce tu contraseña",
+    "submitButton": "Iniciar Sesión",
+    "errorCredentials": "Correo electrónico o contraseña incorrectos.",
+    "errorServer": "Error al conectar con el servidor."
+  },
+  "sidebar": {
+    "dashboard": "Panel de Control",
+    "products": "Productos",
+    "movements": "Movimientos",
+    "register_user": "Registrar Usuario (Admin)",
+    "logged_in_as": "Sesión iniciada como:",
+    "logout": "Cerrar Sesión"
+  },
+  "dashboard": {
+    "title": "Panel de Control General",
+    "subtitle": "Métricas de inventario en tiempo real y asistencia analítica de IA.",
+    "total_value": "VALOR TOTAL DEL INVENTARIO",
+    "total_value_desc": "Valoración del costo de los activos basada en el stock actual de la base de datos.",
+    "estimated_revenue": "INGRESOS ESTIMADOS (30D)",
+    "estimated_revenue_desc": "Ingresos acumulados rastreados a partir de los movimientos de salida de productos.",
+    "total_items": "Artículos Totales en Stock",
+    "inputs": "Entradas (Mes)",
+    "outputs": "Salidas (Mes)",
+    "low_stock": "Alertas de Stock Bajo",
+    "recent_movements": "Movimientos Recientes de Stock",
+    "ai_agent_title": "Agente de Inventario con IA",
+    "ai_agent_subtitle": "Solicite al modelo que analice la dinámica del stock o las necesidades de suministro según los registros.",
+    "ai_prompt_placeholder": "Pregúntele al agente cualquier cosa sobre la velocidad del stock...",
+    "btn_send": "Enviar"
+  },
+  "register": {
+    "title": "Nuevo Empleado",
+    "subtitle": "Área Exclusiva del Administrador",
+    "full_name": "Nombre Completo",
+    "email": "Correo Electrónico Corporativo",
+    "password": "Contraseña Temporal",
+    "role": "Nivel de Acceso (Rol)",
+    "btn_register": "Registrar Empleado",
+    "btn_cancel": "Cancelar y Volver"
+  },
+  "change_password": {
+    "title": "Cambiar Tu Contraseña",
+    "subtitle": "Este es tu primer inicio de sesión. Debes actualizar tu contraseña para continuar.",
+    "current_password": "Contraseña Actual (Temporal)",
+    "new_password": "Nueva Contraseña",
+    "confirm_password": "Confirmar Nueva Contraseña",
+    "btn_update": "Actualizar Contraseña",
+    "loading": "Actualizando..."
+  }
+}
