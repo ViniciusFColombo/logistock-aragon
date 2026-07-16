@@ -106,9 +106,18 @@ class InventoryRepository:
             raise e
     
     @staticmethod
-    def get_all_movements(db: Session) -> List[models.StockMovement]:
-        """Searches the entire history of stock movements."""
-        return db.query(models.StockMovement).all()
+    def get_all_movements(db: Session, skip: int = 0, limit: Optional[int] = None) -> List[models.StockMovement]:
+        """Searches the history of stock movements supporting pagination.
+        If limit is None, returns all records to maintain compatibility with dashboard and tests.
+        """
+        query = db.query(models.StockMovement).order_by(models.StockMovement.created_at.desc())
+        
+        if skip > 0:
+            query = query.offset(skip)
+        if limit is not None:
+            query = query.limit(limit)
+            
+        return query.all()
     
     @staticmethod
     def get_product_sales_history(product_id: int, db: Session):

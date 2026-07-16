@@ -22,7 +22,6 @@ class AgentService:
                     sales_history = InventoryRepository.get_product_sales_history(product_id, db)
                     predicted_7_days = MLService.predict_next_days_sales(sales_history, days_to_predict=7)
 
-                    # Deixando o texto mais explícito e legível para a IA interpretar
                     analytics_context.append(
                         f"- Product: {item['product_name']} (ID: {product_id})\n"
                         f"  Current Stock: {item['current_stock']} units\n"
@@ -48,7 +47,9 @@ class AgentService:
                 Round the final number up to the nearest integer.
                 3. Answer the user's query professionally, providing a clear table or list with the exact number of units they need to buy based on your 30-day calculation and ML trends.
                 4. DETECT the language of the user's query (e.g., English, Spanish, or Portuguese).
-                5. YOU MUST RESPOND IN THE SAME LANGUAGE USED BY THE USER. If they ask in Spanish, reply in Spanish."""
+                5. STRICT LANGUAGE RULE: You MUST respond in the EXACT SAME language used by the user in their current query. If the query is in English, you MUST reply entirely in English. If it is in Spanish, reply in Spanish. Never mix them.
+                6. NO EVASIVE ANSWERS: You have full access to the inventory data above. Never claim you lack access to data, history, or stock metrics. If asked about stock outputs, performance, or demand, extract the answers directly from the provided CRITICAL DATABASE DATA.
+                """
 
             response = await client.chat.completions.create(
                 model="gpt-4o-mini",

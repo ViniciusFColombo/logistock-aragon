@@ -12,7 +12,7 @@ raw_origins = os.getenv("ALLOWED_ORIGINS")
 
 # We convert the string into a list by splitting it at the commas
 # (This allows you to add multiple sites in the future, e.g., site1.com,site2.com)
-origins = [origin.strip() for origin in raw_origins.split(",")]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,

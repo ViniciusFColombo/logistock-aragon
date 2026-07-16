@@ -19,4 +19,23 @@ api.interceptors.request.use(
   }
 );
 
+export const inventoryService = {
+  getDashboardSummary: async () => {
+    const response = await api.get('/products/dashboard/summary');
+    return response.data;
+  },
+
+  // Retrieves the flow prediction and current status for the table.
+  getStockRunway: async () => {
+    const response = await api.get('/products/stock-runway');
+    return response.data;
+  },
+
+  // Sends the user's question or the input from quick-reply buttons to the back-end AI.
+  askAgent: async (userQuery) => {
+    const response = await api.post('/agent/ask', { query: userQuery });
+    return response.data; // Retorn {"status": "success", "agent_response": "..."}
+  }
+};
+
 export default api;

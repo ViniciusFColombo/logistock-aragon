@@ -55,13 +55,50 @@ class InventoryService:
         total_products = InventoryRepository.get_total_products_count(db)
         total_stock_items = InventoryRepository.get_total_stock_items(db)
         total_inventory_value = InventoryRepository.get_total_inventory_value(db)
-        low_stock_count = InventoryRepository.count_low_stock(db, threshold=5)
+        
+        low_stock_count = InventoryRepository.count_low_stock(db, threshold=15)
+
+        movements = InventoryRepository.get_all_movements(db)
+        
+        inputs_month = 0
+        outputs_month = 0
+        estimated_revenue = 0.0
+        
+        thirty_days_ago = datetime.now(timezone.utc) - timedelta(days=30)
+        cutoff_date = thirty_days_ago.replace(tzinfo=None)
+
+        for m in movements:
+            m_date = m.created_at
+            if m_date is None:
+                continue
+            if m_date.tzinfo is not None:
+                m_date = m_date.replace(tzinfo=None)
+                
+            # Filters only items from the last 30 days.
+            if m_date > cutoff_date:
+                
+                m_type_str = str(m.movement_type.value if hasattr(m.movement_type, 'value') else m.movement_type).strip().upper()
+                
+                if m_type_str == "IN":
+                    inputs_month += m.quantity
+                    
+                elif m_type_str == "OUT":
+                    outputs_month += m.quantity
+                    
+                    if m.product_id:
+                        from app import models
+                        prod = db.query(models.Product).filter(models.Product.id == m.product_id).first()
+                        if prod:
+                            estimated_revenue += (m.quantity * float(prod.price))
 
         return {
             "total_products": total_products,
             "total_stock_items": total_stock_items,
             "total_inventory_value": round(total_inventory_value, 2),
-            "low_stock_count": low_stock_count
+            "low_stock_count": low_stock_count,
+            "inputs_month": inputs_month,
+            "outputs_month": outputs_month,
+            "estimated_revenue": round(estimated_revenue, 2)
         }
     
     @staticmethod
@@ -115,6 +152,11 @@ class InventoryService:
             movement_type=transaction.movement_type
         )
     
+    @staticmethod
+    def list_movements(db: Session, skip: int = 0, limit: int = 10) -> List[models.StockMovement]:
+        """Business service to list movements with mandatory pagination limits."""
+        return InventoryRepository.get_all_movements(db, skip=skip, limit=limit)
+
     @staticmethod
     def get_stock_runway_prediction(db: Session) -> list:
         products_list = InventoryRepository.list_products(db, limit=1000)

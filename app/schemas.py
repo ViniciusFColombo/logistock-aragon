@@ -86,6 +86,12 @@ class DashboardSummary(BaseModel):
     total_stock_items: int
     total_inventory_value: float
     low_stock_count: int
+    inputs_month: int
+    outputs_month: int
+    estimated_revenue: float
+
+    class Config:
+        from_attributes = True
 
 class AgentQueryRequest(BaseModel):
     query: Annotated[
