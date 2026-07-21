@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Enum, Boolean
 from datetime import datetime, timezone
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 import enum
 from .constants import MovementType
 from .database import Base
@@ -37,9 +38,10 @@ class StockMovement(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
-    
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False) 
-    
     quantity = Column(Integer, nullable=False)
     movement_type = Column(Enum(MovementType), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    # Mapping the relationship with the products table
+    product = relationship("Product")

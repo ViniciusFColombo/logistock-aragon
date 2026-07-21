@@ -50,5 +50,5 @@ def delete_product(product_id: int, db: Session = Depends(get_db), current_admin
     return None
 
 @router.get("/movements/all", response_model=List[schemas.StockMovementResponse])
-def list_movements(db: Session = Depends(get_db), skip: int = 0, limit: int = 10, current_user: models.User = Depends(get_current_user)):
+def list_movements(db: Session = Depends(get_db), skip: int = 0, limit: int = 10):
     return InventoryService.list_movements(db, skip, limit)

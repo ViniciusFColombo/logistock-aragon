@@ -66,6 +66,7 @@ class StockMovementCreate(BaseModel):
 class StockMovementResponse(BaseModel):
     id: int
     product_id: int
+    product: Optional[ProductResponse] = None
     user_id: int 
     quantity: int
     movement_type: MovementType

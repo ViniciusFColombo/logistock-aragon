@@ -10,6 +10,7 @@
     "errorCredentials": "Incorrect email or password.",
     "errorServer": "Error connecting to the server."
   },
+  
   "sidebar": {
     "dashboard": "Dashboard",
     "products": "Products",
@@ -18,6 +19,7 @@
     "logged_in_as": "Logged in as:",
     "logout": "Logout / Sign Out"
   },
+
   "dashboard": {
     "title": "Overview Dashboard",
     "subtitle": "Real-time inventory metrics and AI analytical assistance.",
@@ -26,8 +28,8 @@
     "estimated_revenue": "ESTIMATED REVENUE (30D)",
     "estimated_revenue_desc": "Accumulated income tracked from OUT product movements.",
     "total_items": "Registered Products",
-    "inputs": "Inputs (30D)",
-    "outputs": "Outputs (30D)",
+    "inputs": "Inflows (30D)",
+    "outputs": "Outflows (30D)",
     "low_stock": "Low Stock Alerts",
     "recent_movements": "Recent Stock Movements",
     "ai_agent_title": "AI Inventory Agent",
@@ -45,6 +47,52 @@
     "runway_no_data": "No runway data",
     "days_left": "days left"
   },
+
+  "movements": {
+    "title": "Stock Movements History",
+    "subtitle": "Logistics control, auditing, and real-time inventory analysis.",
+    "new_btn": "New Operation",
+    "pandas_title": "Predictive Engine Alerts (Pandas)",
+    "no_alerts": "No critical stock alerts based on daily sales analysis.",
+    "alert_critical": "The product {{name}} has a high output velocity. Expected to run out in {{days}} days.",
+    "flow_summary": "Monthly Flow (U)",
+    "col_date": "Date / Time",
+    "col_product": "Product",
+    "col_type": "Operation",
+    "col_qty": "Quantity (U)",
+    "col_user": "User ID",
+    "loading": "Connecting to Neon DB...",
+    "no_data": "No movement records found on this page.",
+    "page": "Page",
+    "btn_prev": "Previous",
+    "btn_next": "Next",
+    "new_op_title": "New Operation",
+    "drawer_placeholder_desc": "The registration form with real-time stock validation will load here in tomorrow's step.",
+    "drawer_placeholder_box": "[Form under preparation]",
+    "btn_cancel": "Cancel",
+    "btn_save": "Save",
+    "type_in": "Inflow",
+    "type_out": "Outflow",
+    "form_search_label": "Search Product (ID or SKU)",
+    "form_search_placeholder": "e.g. 1 or monlg24 (MON-LG-24)...",
+    "btn_search": "Search",
+    "product_not_found": "Product not found.",
+    "prod_name": "Product Name",
+    "current_stock": "Current Stock",
+    "unit_price": "Unit Price",
+    "op_type": "Operation Type",
+    "qty_label": "Quantity",
+    "total_value": "Total Operation Value",
+    "err_insufficient_stock": "Quantity exceeds available stock!",
+    "err_invalid_qty": "Quantity must be greater than zero.",
+    "modal_title": "Confirm Operation",
+    "modal_desc": "Are you sure you want to register this stock movement?",
+    "modal_btn_confirm": "Confirm & Save",
+    "modal_btn_cancel": "Go Back",
+    "msg_success": "Operation registered successfully!",
+    "new_stock_label": "New Resulting Stock"
+  },
+
   "register": {
     "title": "New Employee",
     "subtitle": "Administrator Exclusive Area",
@@ -55,6 +103,7 @@
     "btn_register": "Register Employee",
     "btn_cancel": "Cancel & Return"
   },
+
   "change_password": {
     "title": "Change Your Password",
     "subtitle": "This is your first login. You must update your password to continue.",

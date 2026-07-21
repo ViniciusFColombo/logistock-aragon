@@ -25,17 +25,40 @@ export const inventoryService = {
     return response.data;
   },
 
-  // Retrieves the flow prediction and current status for the table.
   getStockRunway: async () => {
     const response = await api.get('/products/stock-runway');
     return response.data;
   },
 
-  // Sends the user's question or the input from quick-reply buttons to the back-end AI.
   askAgent: async (userQuery) => {
     const response = await api.post('/agent/ask', { query: userQuery });
-    return response.data; // Retorn {"status": "success", "agent_response": "..."}
+    return response.data;
+  },
+
+  getMovements: async (skip = 0, limit = 10) => {
+    const response = await api.get('/products/movements/all', {
+      params: { skip, limit }
+    });
+    return response.data;
+  },
+
+  // Search Methods for the Form
+  getProductById: async (id) => {
+    const response = await api.get(`/products/${id}`);
+    return response.data;
+  },
+
+  getProductBySku: async (sku) => {
+    const response = await api.get(`/products/sku/${sku}`);
+    return response.data;
+  },
+
+  createTransaction: async (payload) => {
+    // payload: { product_id: int, quantity: int, movement_type: "in" | "out" }
+    const response = await api.post('/products/transaction', payload);
+    return response.data;
   }
+
 };
 
 export default api;

@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func, text
 from typing import List, Optional
 from app import models, schemas
@@ -107,10 +107,12 @@ class InventoryRepository:
     
     @staticmethod
     def get_all_movements(db: Session, skip: int = 0, limit: Optional[int] = None) -> List[models.StockMovement]:
-        """Searches the history of stock movements supporting pagination.
-        If limit is None, returns all records to maintain compatibility with dashboard and tests.
-        """
-        query = db.query(models.StockMovement).order_by(models.StockMovement.created_at.desc())
+        """Searches the history of stock movements supporting pagination and eager loading of products."""
+        query = (
+            db.query(models.StockMovement)
+            .options(joinedload(models.StockMovement.product))
+            .order_by(models.StockMovement.created_at.desc())
+        )
         
         if skip > 0:
             query = query.offset(skip)

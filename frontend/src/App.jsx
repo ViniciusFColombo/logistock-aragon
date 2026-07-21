@@ -3,7 +3,8 @@ import { jwtDecode } from 'jwt-decode';
 import Login from './pages/Login';
 import RegisterUser from './pages/RegisterUser';
 import ChangePassword from './pages/ChangePassword';
-import Dashboard from './pages/Dashboard'; 
+import Dashboard from './pages/Dashboard';
+import Movements from './pages/Movements';
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -16,7 +17,7 @@ function PrivateRoute({ children }) {
     jwtDecode(token);
     return children;
   } catch (error) {
-  // If the token is invalid or corrupted, clear it and log out
+    // If the token is invalid or corrupted, clear it and log out
     localStorage.removeItem('token');
     return <Navigate to="/" replace />;
   }
@@ -78,6 +79,16 @@ function App() {
           element={
             <PrivateRoute>
               <Dashboard />
+            </PrivateRoute>
+          } 
+        />
+
+        {/* Protected Route: Movements Screen (Any Logged-in User) */}
+        <Route 
+          path="/movements" 
+          element={
+            <PrivateRoute>
+              <Movements />
             </PrivateRoute>
           } 
         />

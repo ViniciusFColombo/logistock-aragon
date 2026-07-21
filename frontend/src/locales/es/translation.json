@@ -10,6 +10,7 @@
     "errorCredentials": "Correo electrónico o contraseña incorrectos.",
     "errorServer": "Error al conectar con el servidor."
   },
+
   "sidebar": {
     "dashboard": "Panel de Control",
     "products": "Productos",
@@ -18,6 +19,7 @@
     "logged_in_as": "Sesión iniciada como:",
     "logout": "Cerrar Sesión"
   },
+
   "dashboard": {
     "title": "Panel de Control General",
     "subtitle": "Métricas de inventario en tiempo real y asistencia analítica de IA.",
@@ -45,6 +47,54 @@
     "runway_no_data": "Sin datos de previsión",
     "days_left": "días restantes"
   },
+
+  "movements": {
+    "title": "Historial de Movimientos",
+    "subtitle": "Control logístico, auditoría y análisis de inventario en tiempo real.",
+    "new_btn": "Nueva Operación",
+    "pandas_title": "Alertas del Motor Predictivo (Pandas)",
+    "no_alerts": "No hay alertas críticas de stock según el análisis de ventas diarias.",
+    "alert_critical": "El producto {{name}} tiene una alta velocidad de salida. Previsión de agotarse en {{days}} días.",
+    "flow_summary": "Flujo Mensual",
+    "col_date": "Fecha / Hora",
+    "col_product": "Producto",
+    "col_type": "Operación",
+    "col_qty": "Cantidad (U)",
+    "col_user": "ID Usuario",
+    "loading": "Conectando con Neon DB...",
+    "no_data": "No se encontraron registros de movimientos en esta página.",
+    "page": "Página",
+    "btn_prev": "Anterior",
+    "btn_next": "Siguiente",
+    "new_op_title": "Nueva Operación",
+    "drawer_placeholder_desc": "El formulario de registro con validación de stock en tiempo real se cargará aquí en el paso de mañana.",
+    "drawer_placeholder_box": "[Formulario en preparación]",
+    "btn_cancel": "Cancelar",
+    "btn_save": "Guardar",
+    "type_in": "Entrada",
+    "type_out": "Salida",
+    "total_in": "Total de Entradas",
+    "total_out": "Total de Salidas",
+    "form_search_label": "Buscar Producto (ID o SKU)",
+    "form_search_placeholder": "ej. 1 o monlg24 (MON-LG-24)...",
+    "btn_search": "Buscar",
+    "product_not_found": "Producto no encontrado.",
+    "prod_name": "Nombre del Producto",
+    "current_stock": "Stock Actual",
+    "unit_price": "Precio Unitario",
+    "op_type": "Tipo de Operación",
+    "qty_label": "Cantidad",
+    "total_value": "Valor Total de la Operación",
+    "err_insufficient_stock": "¡La cantidad supera el stock disponible!",
+    "err_invalid_qty": "La cantidad debe ser mayor a cero.",
+    "modal_title": "Confirmar Operación",
+    "modal_desc": "¿Estás seguro de que deseas registrar este movimiento de stock?",
+    "modal_btn_confirm": "Confirmar y Guardar",
+    "modal_btn_cancel": "Volver",
+    "msg_success": "¡Operación registrada con éxito!",
+    "new_stock_label": "Nuevo Stock Resultante"
+  },
+
   "register": {
     "title": "Nuevo Empleado",
     "subtitle": "Área Exclusiva del Administrador",
@@ -55,6 +105,7 @@
     "btn_register": "Registrar Empleado",
     "btn_cancel": "Cancelar y Volver"
   },
+  
   "change_password": {
     "title": "Cambiar Tu Contraseña",
     "subtitle": "Este es tu primer inicio de sesión. Debes actualizar tu contraseña para continuar.",

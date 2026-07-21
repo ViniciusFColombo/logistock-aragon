@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { jwtDecode } from 'jwt-decode';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { inventoryService } from '../services/Api'; 
+import { inventoryService } from '../services/Api';
+import Sidebar from '../components/Sidebar';
 
 function Dashboard() {
   const { t, i18n } = useTranslation();
@@ -118,62 +119,7 @@ function Dashboard() {
     <div className="flex min-h-screen bg-slate-900 text-white">
       
       {/* LEFT SIDEBAR */}
-      <aside className="w-64 bg-slate-950 border-r border-slate-800 p-6 flex flex-col justify-between">
-        <div>
-          <div className="mb-8">
-            <h1 className="text-2xl font-black text-emerald-400 tracking-wider">LogiStock</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Aragón Dashboard</p>
-          </div>
-          <nav className="space-y-2">
-            <a href="#" className="flex items-center gap-3 px-4 py-2.5 rounded-lg bg-emerald-500/10 text-emerald-400 font-medium text-sm">
-              📊 {t('sidebar.dashboard')}
-            </a>
-            <a href="#" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition text-sm">
-              📦 {t('sidebar.products')}
-            </a>
-            <a href="#" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition text-sm">
-              🔄 {t('sidebar.movements')}
-            </a>
-            {isAdmin && (
-              <a href="/admin/cadastro" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition text-sm border border-dashed border-slate-800 hover:border-slate-700">
-                👤 {t('sidebar.register_user')}
-              </a>
-            )}
-          </nav>
-        </div>
-
-        <div className="border-t border-slate-900 pt-4 flex flex-col gap-4">
-          <div className="flex gap-2 justify-center bg-slate-900/50 p-1 rounded-lg border border-slate-800">
-            <button 
-              onClick={() => changeLanguage('en')} 
-              className={`flex-1 text-[10px] py-1 rounded-md font-bold transition cursor-pointer ${i18n.language?.startsWith('en') ? 'bg-emerald-500 text-slate-950' : 'text-slate-400 hover:text-slate-200'}`}
-            >
-              EN
-            </button>
-            <button 
-              onClick={() => changeLanguage('es')} 
-              className={`flex-1 text-[10px] py-1 rounded-md font-bold transition cursor-pointer ${i18n.language?.startsWith('es') ? 'bg-emerald-500 text-slate-950' : 'text-slate-400 hover:text-slate-200'}`}
-            >
-              ES
-            </button>
-          </div>
-
-          <div className="flex flex-col gap-2">
-            <div className="text-xs text-slate-600">
-              {t('sidebar.logged_in_as')} <span className="text-slate-400 font-medium">{isAdmin ? 'Administrator' : 'Operator'}</span>
-            </div>
-            <button 
-              onClick={() => {
-                localStorage.removeItem('token');
-                window.location.href = '/';
-              }}
-              className="w-full cursor-pointer text-left text-xs font-semibold text-red-400 hover:text-red-300 transition py-1 flex items-center gap-2"
-            >
-              🚪 {t('sidebar.logout')}
-            </button>
-          </div>
-        </div>
-      </aside>
+      <Sidebar />
 
       {/* MAIN CONTENT */}
       <main className="flex-1 p-8 overflow-y-auto">
