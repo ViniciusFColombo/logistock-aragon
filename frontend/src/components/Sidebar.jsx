@@ -44,8 +44,10 @@ export default function Sidebar() {
           
           {/* LINK: PRODUCTS */}
           <Link 
-            to="#" 
-            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:bg-slate-900 hover:text-slate-200 transition text-sm"
+            to="/products" 
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium text-sm transition ${
+              location.pathname === '/products' ? 'bg-emerald-500/10 text-emerald-400' : 'text-slate-400 hover:bg-slate-900 hover:text-slate-200'
+            }`}
           >
             📦 {t('sidebar.products')}
           </Link>

@@ -5,6 +5,7 @@ import RegisterUser from './pages/RegisterUser';
 import ChangePassword from './pages/ChangePassword';
 import Dashboard from './pages/Dashboard';
 import Movements from './pages/Movements';
+import Products from './pages/Products';
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -17,13 +18,11 @@ function PrivateRoute({ children }) {
     jwtDecode(token);
     return children;
   } catch (error) {
-    // If the token is invalid or corrupted, clear it and log out
     localStorage.removeItem('token');
     return <Navigate to="/" replace />;
   }
 }
 
-// Admins Only
 function AdminRoute({ children }) {
   const token = localStorage.getItem('token');
 
@@ -50,10 +49,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Route: Login Screen */}
         <Route path="/" element={<Login />} />
 
-        {/* Protected Route: User Registration (Administrators Only) */}
         <Route 
           path="/admin/cadastro" 
           element={
@@ -63,7 +60,6 @@ function App() {
           } 
         />
 
-        {/* Protected Route: Password Change (Any Logged-in User) */}
         <Route 
           path="/change-password" 
           element={
@@ -73,7 +69,6 @@ function App() {
           } 
         />
 
-        {/* Protected Route: System Dashboard (Any Logged-in User) */}
         <Route 
           path="/dashboard" 
           element={
@@ -83,7 +78,6 @@ function App() {
           } 
         />
 
-        {/* Protected Route: Movements Screen (Any Logged-in User) */}
         <Route 
           path="/movements" 
           element={
@@ -93,7 +87,15 @@ function App() {
           } 
         />
 
-        {/* For non-existent routes */}
+        <Route 
+          path="/products" 
+          element={
+            <PrivateRoute>
+              <Products />
+            </PrivateRoute>
+          } 
+        />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

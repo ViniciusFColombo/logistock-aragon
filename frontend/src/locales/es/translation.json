@@ -114,5 +114,77 @@
     "confirm_password": "Confirmar Nueva Contraseña",
     "btn_update": "Actualizar Contraseña",
     "loading": "Actualizando..."
+  },
+
+  "products": {
+    "session_expired": "Tu sesión ha expirado. Por favor, vuelve a iniciar sesión.",
+    "title": "Gestión de Productos",
+    "subtitle": "Administra el catálogo e inventario en tiempo real.",
+    "new_product": "Nuevo Producto",
+    "search_placeholder": "Buscar por nombre o SKU...",
+    "all_categories": "Todas las Categorías",
+    "th_product": "Producto",
+    "th_sku": "SKU",
+    "th_category": "Categoría",
+    "th_price": "Precio",
+    "th_stock": "Stock",
+    "th_actions": "Acciones",
+    "no_category": "Sin Categoría",
+    "loading": "Cargando productos...",
+    "no_results": "No se encontraron productos.",
+    "error_loading": "Error al cargar la lista de productos.",
+    "confirm_delete": "¿Estás seguro de que deseas eliminar este producto?",
+    "delete_failed": "Error al eliminar el producto. Solo los administradores pueden realizar esta acción.",
+    "skip_label": "Saltar",
+    "limit_label": "Límite",
+    "btn_prev": "Anterior",
+    "btn_next": "Siguiente",
+    "action_edit": "Editar",
+    "action_delete": "Eliminar",
+    "modal": {
+      "create_title": "Nuevo Producto",
+      "edit_title": "Editar Producto",
+      "label_name": "Nombre del Producto",
+      "placeholder_name": "Introduzca el nombre del producto.",
+      "label_sku": "SKU",
+      "placeholder_sku": "Código SKU",
+      "label_category": "Categoría",
+      "select_category": "Seleccionar categoría",
+      "label_price": "Precio",
+      "label_stock": "Cantidad en Stock",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saving": "Guardando...",
+      "error_save": "Error al guardar el producto.",
+      "stock_warning": "El stock solo se modifica mediante la registrar Movimientos.",
+      "create_subtitle": "Ingresa los detalles del nuevo producto",
+      "edit_subtitle": "Actualiza la información del producto",
+      "confirm_title": "Confirmar Operación",
+      "confirm_subtitle_create": "¿Estás seguro de que deseas registrar este nuevo producto?",
+      "confirm_subtitle_edit": "¿Estás seguro de que deseas guardar los cambios?",
+      "btn_back": "Volver",
+      "btn_confirm_save": "Confirmar y Guardar",
+      "success_create_title": "¡Producto Creado!",
+      "success_edit_title": "¡Producto Actualizado!",
+      "success_message": "La operación se completó exitosamente.",
+      "btn_finish": "Entendido",
+      "sku_disabled_hint": "* El SKU es un identificador único y no se puede modificar."
+    },
+    "delete_modal": {
+      "title": "Eliminar Producto",
+      "subtitle": "¿Estás seguro de que deseas eliminar este producto? Esta acción no se puede deshacer.",
+      "btn_cancel": "Cancelar",
+      "btn_confirm": "Eliminar"
+    }
+  },
+
+  "categories": {
+    "btn_add_inline": " Nueva Categoría",
+    "placeholder_inline": "ej. Electrónica",
+    "search_placeholder": "Buscar categoría en la lista...",
+    "empty_error": "El nombre no puede estar vacío",
+    "already_exists": "Esta categoría ya existe",
+    "create_error": "Error al crear la categoría"
   }
+  
 }

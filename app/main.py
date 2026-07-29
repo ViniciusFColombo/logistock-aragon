@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI
 from .database import engine
 from . import models
-from .routes import inventory, auth, agent
+from .routes import inventory, auth, agent, categories
 from fastapi.middleware.cors import CORSMiddleware
 
 app= FastAPI(title="LogiStock Aragón - LogiStock Aragón - Inventory Management")
@@ -41,6 +41,7 @@ create_tables()
 app.include_router(auth.router)
 app.include_router(inventory.router)
 app.include_router(agent.router)
+app.include_router(categories.router)
 
 @app.get("/")
 def home():

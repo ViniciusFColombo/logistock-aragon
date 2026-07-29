@@ -11,7 +11,7 @@ from .models import UserRole
 class ProductBase(BaseModel):
     name: str = Field(..., min_length=3, max_length=100, json_schema_extra={"examples": ["Monitor LG 24'"]})
     sku: str = Field(..., json_schema_extra={"examples": ["MON-LG-24"]})
-    category: Optional[str] = Field(None, json_schema_extra={"examples": ["Electronics"]})
+    category_id: int = Field(..., description="ID da Categoria associada")
     price: float = Field(..., gt=0, json_schema_extra={"examples": [150.50]})
     stock_quantity: int = Field(default=0, ge=0, json_schema_extra={"examples": [10]})
 
@@ -20,11 +20,18 @@ class ProductCreate(ProductBase):
 
 class ProductUpdate(BaseModel):
     name: Optional[str] = None
+    category_id: Optional[int] = None
     price: Optional[float] = None
     stock_quantity: Optional[int] = None
 
-class ProductResponse(ProductBase):
+class ProductResponse(BaseModel):
     id: int
+    name: str
+    sku: str
+    category_id: int
+    category_rel: Optional[CategoryResponse] = None
+    price: float
+    stock_quantity: int
     created_at: datetime
     updated_at: datetime
 
@@ -39,7 +46,6 @@ class UserBase(BaseModel):
     email: EmailStr = Field(..., json_schema_extra={"examples": ["vinicius@logistock.com"]})
     role: UserRole = Field(default=UserRole.OPERATOR)
 
-# Schema used by the Admin within the Dashboard to create new employees
 class UserCreate(UserBase):
     password: str = Field(..., min_length=6, description="Default temporary user password")
 
@@ -102,3 +108,50 @@ class AgentQueryRequest(BaseModel):
         ...,
         description="The question or prompt sent by the user to the AI logistics agent."
     )
+
+# ==========================================
+# CATEGORIES
+# ==========================================
+
+class CategoryBase(BaseModel):
+    name: str = Field(..., min_length=2, max_length=50, json_schema_extra={"examples": ["Electrónica"]})
+
+class CategoryCreate(CategoryBase):
+    pass
+
+class CategoryResponse(CategoryBase):
+    id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+# ==========================================
+# SUPPLIERS
+# ==========================================
+
+class SupplierBase(BaseModel):
+    name: str = Field(..., min_length=2, max_length=100)
+    phone: Optional[str] = None
+
+class SupplierCreate(SupplierBase):
+    pass
+
+class SupplierResponse(SupplierBase):
+    id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+# ==========================================
+# MONTHLY REPORTS
+# ==========================================
+
+class MonthlyReportResponse(BaseModel):
+    id: int
+    month_year: str
+    total_inputs: int
+    total_outputs: int
+    total_revenue: float
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)

@@ -30,28 +30,38 @@ def seed():
 
         print(f"Generating historical data for {len(products)} products using User ID: {any_user.id}...")
 
-        # Date: June 1 to August 31, 2026
-        start_range = datetime(2026, 6, 1, 0, 0, 0)
-        end_range = datetime(2026, 8, 31, 23, 59, 59)
+        # Date: July 1 to September 30, 2026
+        start_range = datetime(2026, 7, 1, 0, 0, 0)
+        end_range = datetime(2026, 9, 30, 23, 59, 59)
+
+        total_movements_created = 0
 
         for product in products:
             product.stock_quantity = 0
 
-            for i in range(100):
-                date = generate_random_date_between(start_range, end_range)
-                
-                m_type = constants.MovementType.IN if random.random() < 0.3 else constants.MovementType.OUT
-                qty = random.randint(1, 10)
+            # Generate 20 timestamps per product and sort them chronologically
+            dates = [generate_random_date_between(start_range, end_range) for _ in range(20)]
+            dates.sort()
 
-                # Consistency rule to prevent negative inventory
+            for i, date in enumerate(dates):
+                # RULE: First movement MUST be IN to establish initial stock
+                if i == 0:
+                    m_type = constants.MovementType.IN
+                    qty = random.randint(15, 30)
+                else:
+                    # 40% chance of IN, 60% chance of OUT
+                    m_type = constants.MovementType.IN if random.random() < 0.4 else constants.MovementType.OUT
+                    qty = random.randint(1, 8)
+
+                # Consistency check: convert OUT to IN if stock would drop below zero
+                if m_type == constants.MovementType.OUT and (product.stock_quantity - qty < 0):
+                    m_type = constants.MovementType.IN
+
+                # Update virtual stock balance
                 if m_type == constants.MovementType.IN:
                     product.stock_quantity += qty
                 else:
-                    if product.stock_quantity - qty < 0:
-                        product.stock_quantity += qty
-                        m_type = constants.MovementType.IN
-                    else:
-                        product.stock_quantity -= qty
+                    product.stock_quantity -= qty
 
                 movement = models.StockMovement(
                     product_id=product.id,
@@ -61,9 +71,10 @@ def seed():
                     created_at=date
                 )
                 db.add(movement)
-        
+                total_movements_created += 1
+
         db.commit()
-        print("Success! Database populated with 100 movements between June 1st and August 31st, 2026.")
+        print(f"Success! Database populated with {total_movements_created} movements between July 1st and September 30th, 2026.")
     except Exception as e:
         print(f"Error: {e}")
         db.rollback()
