@@ -16,135 +16,6 @@ O backend é executado em **Docker**, enquanto o frontend é desenvolvido com **
 
 ---
 
-# 🇺🇸 English Version
-
-LogiStock Aragón is an intelligent full-stack inventory management system designed for e-commerce, built with **FastAPI, PostgreSQL, React.js, and an Integrated AI Agent**.
-
-The project uses a scalable architecture based on the **Service-Repository Pattern**, secure JWT authentication, an interactive dashboard, and an AI-powered stock recommendation engine based on real-time database information.
-
-The backend is containerized using **Docker**, while the frontend runs locally using **React.js and Vite** during development.
-
-The PostgreSQL database is hosted remotely on **Neon**, allowing the application to use a managed cloud database while keeping sensitive credentials outside the source code.
-
-## ✨ Key Features
-
-* **Interactive Frontend:** Built with React.js, Tailwind CSS, Lucide Icons, and internationalization (i18n).
-* **Smart Dashboard:** Real-time inventory status, low-stock alerts, stock metrics, and movement history.
-* **AI Agent Assistant:** AI-powered inventory analysis and stock replenishment recommendations based on real-time database queries.
-* **Robust Backend:** Asynchronous FastAPI endpoints, Pydantic validation, and PostgreSQL integration.
-* **Service-Repository Architecture:** Separation between API routes, business logic, and data access layers.
-* **JWT Authentication:** Secure authentication and authorization system.
-* **PostgreSQL on Neon:** Cloud-hosted PostgreSQL database used as the application's persistent data layer.
-* **Dockerized Backend:** FastAPI backend configured to run inside a Docker container.
-* **Automated Testing:** Test suite using Pytest and coverage analysis.
-
----
-
-# ⚙️ Configuration & Environment
-
-The application uses environment variables to manage database connections and security settings.
-
-Sensitive credentials such as the database connection string and application secret key are **not committed to the repository**.
-
-## 1. Create the `.env` file
-
-Create a `.env` file in the root directory:
-
-```env
-DATABASE_URL=postgresql://user:password@your-neon-host/your-database
-SECRET_KEY=your_super_secret_key_here
-```
-
-> **Note:** `DATABASE_URL` should contain the PostgreSQL connection string provided by Neon.
-
-The `.env` file should remain local and must not be committed to Git.
-
-A typical `.gitignore` configuration should include:
-
-```gitignore
-.env
-```
-
-The application reads these environment variables when the FastAPI backend starts.
-
----
-
-# 🐳 Backend with Docker
-
-The FastAPI backend is containerized using **Docker and Docker Compose**.
-
-From the root directory of the project, start the backend with:
-
-```bash
-docker compose up -d
-```
-
-To rebuild the backend after making changes to the Docker configuration or dependencies:
-
-```bash
-docker compose up --build -d
-```
-
-The API will be available at:
-
-* 📑 **Interactive API Documentation (Swagger UI):** http://localhost:8000/docs
-
-To stop the Docker services:
-
-```bash
-docker compose down
-```
-
----
-
-# 💻 Frontend
-
-The frontend is developed with **React.js and Vite** and currently runs locally rather than inside Docker.
-
-Navigate to the frontend directory:
-
-```bash
-cd frontend
-```
-
-Install the dependencies:
-
-```bash
-npm install
-```
-
-Start the development server:
-
-```bash
-npm run dev
-```
-
-The frontend will normally be available at:
-
-* 💻 **Web Application:** http://localhost:5173
-
-The frontend communicates with the FastAPI backend through its REST API.
-
----
-
-# 🧪 Testing & Quality Assurance
-
-The project includes an automated test suite using **Pytest** to validate application workflows.
-
-Tests can be executed inside the API container:
-
-```bash
-docker compose exec api pytest -v
-```
-
-To generate a test coverage report:
-
-```bash
-docker compose exec api pytest --cov=app
-```
-
----
-
 # 🇪🇸 Versión en Español
 
 LogiStock Aragón es un sistema inteligente e integral (**Full-Stack**) de gestión de inventarios para comercio electrónico, desarrollado con **FastAPI, PostgreSQL, React.js y un Agente de IA Integrado**.
@@ -406,6 +277,133 @@ An English version of the project documentation is available below.
 > The project follows the **Service-Repository Pattern**, uses JWT authentication, a React.js frontend, a FastAPI backend running in Docker, and a PostgreSQL database hosted on Neon.
 >
 > The system includes inventory monitoring, stock alerts, movement tracking, AI-powered replenishment recommendations, automated testing, and a REST API.
+
+---
+
+LogiStock Aragón is an intelligent full-stack inventory management system designed for e-commerce, built with **FastAPI, PostgreSQL, React.js, and an Integrated AI Agent**.
+
+The project uses a scalable architecture based on the **Service-Repository Pattern**, secure JWT authentication, an interactive dashboard, and an AI-powered stock recommendation engine based on real-time database information.
+
+The backend is containerized using **Docker**, while the frontend runs locally using **React.js and Vite** during development.
+
+The PostgreSQL database is hosted remotely on **Neon**, allowing the application to use a managed cloud database while keeping sensitive credentials outside the source code.
+
+## ✨ Key Features
+
+* **Interactive Frontend:** Built with React.js, Tailwind CSS, Lucide Icons, and internationalization (i18n).
+* **Smart Dashboard:** Real-time inventory status, low-stock alerts, stock metrics, and movement history.
+* **AI Agent Assistant:** AI-powered inventory analysis and stock replenishment recommendations based on real-time database queries.
+* **Robust Backend:** Asynchronous FastAPI endpoints, Pydantic validation, and PostgreSQL integration.
+* **Service-Repository Architecture:** Separation between API routes, business logic, and data access layers.
+* **JWT Authentication:** Secure authentication and authorization system.
+* **PostgreSQL on Neon:** Cloud-hosted PostgreSQL database used as the application's persistent data layer.
+* **Dockerized Backend:** FastAPI backend configured to run inside a Docker container.
+* **Automated Testing:** Test suite using Pytest and coverage analysis.
+
+---
+
+# ⚙️ Configuration & Environment
+
+The application uses environment variables to manage database connections and security settings.
+
+Sensitive credentials such as the database connection string and application secret key are **not committed to the repository**.
+
+## 1. Create the `.env` file
+
+Create a `.env` file in the root directory:
+
+```env
+DATABASE_URL=postgresql://user:password@your-neon-host/your-database
+SECRET_KEY=your_super_secret_key_here
+```
+
+> **Note:** `DATABASE_URL` should contain the PostgreSQL connection string provided by Neon.
+
+The `.env` file should remain local and must not be committed to Git.
+
+A typical `.gitignore` configuration should include:
+
+```gitignore
+.env
+```
+
+The application reads these environment variables when the FastAPI backend starts.
+
+---
+
+# 🐳 Backend with Docker
+
+The FastAPI backend is containerized using **Docker and Docker Compose**.
+
+From the root directory of the project, start the backend with:
+
+```bash
+docker compose up -d
+```
+
+To rebuild the backend after making changes to the Docker configuration or dependencies:
+
+```bash
+docker compose up --build -d
+```
+
+The API will be available at:
+
+* 📑 **Interactive API Documentation (Swagger UI):** http://localhost:8000/docs
+
+To stop the Docker services:
+
+```bash
+docker compose down
+```
+
+---
+
+# 💻 Frontend
+
+The frontend is developed with **React.js and Vite** and currently runs locally rather than inside Docker.
+
+Navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The frontend will normally be available at:
+
+* 💻 **Web Application:** http://localhost:5173
+
+The frontend communicates with the FastAPI backend through its REST API.
+
+---
+
+# 🧪 Testing & Quality Assurance
+
+The project includes an automated test suite using **Pytest** to validate application workflows.
+
+Tests can be executed inside the API container:
+
+```bash
+docker compose exec api pytest -v
+```
+
+To generate a test coverage report:
+
+```bash
+docker compose exec api pytest --cov=app
+```
 
 ---
 
