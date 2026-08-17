@@ -411,7 +411,7 @@ docker compose exec api pytest --cov=app
 
 **Vinicius Ferreira Colombo**
 
-Desarrollador Full-Stack enfocado en **Python, FastAPI, automatización, APIs, bases de datos e integración de Inteligencia Artificial**.
+Desarrollador Full-Stack enfocado en **Python, FastAPI, automatización, APIs, React.js, bases de datos e integración de Inteligencia Artificial**.
 
 ---
 
