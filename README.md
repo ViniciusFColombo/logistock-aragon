@@ -1,183 +1,423 @@
 # LogiStock Aragón 📦🚀
 
-Proyecto en desarrollo: Sistema de gestión de inventario profesional con **FastAPI** y **PostgreSQL**. Actualmente cuenta con la base de datos configurada, arquitectura de servicios y CRUD de productos funcionando.
+**Sistema inteligente de gestão de inventários para e-commerce**, desenvolvido com **FastAPI, PostgreSQL, React.js e Inteligência Artificial**.
+
+O projeto utiliza uma arquitetura baseada no padrão **Service-Repository**, autenticação com **JWT**, dashboard interativo, análise inteligente de estoque e integração com um banco de dados PostgreSQL hospedado na nuvem através do **Neon**.
+
+O backend é executado em **Docker**, enquanto o frontend é desenvolvido com **React.js + Vite** e executado localmente durante o desenvolvimento.
+
+---
+
+## 📺 Video Demo / Vídeo de Demonstración
+
+
+> 🎬 **[Haga clic aquí para ver la demostración completa del proyecto en YouTube](https://www.youtube.com/watch?v=05OLCd_BDcI)**
+
 
 ---
 
 # 🇺🇸 English Version
 
-An intelligent and professional inventory management system designed for e-commerce, built with **FastAPI**, **PostgreSQL**, and **Pandas**.
+LogiStock Aragón is an intelligent full-stack inventory management system designed for e-commerce, built with **FastAPI, PostgreSQL, React.js, and an Integrated AI Agent**.
 
-This project implements a scalable architecture using the **Service-Repository Pattern**, secure authentication, data intelligence for stock prediction, and an automated testing suite fully containerized with **Docker**.
+The project uses a scalable architecture based on the **Service-Repository Pattern**, secure JWT authentication, an interactive dashboard, and an AI-powered stock recommendation engine based on real-time database information.
+
+The backend is containerized using **Docker**, while the frontend runs locally using **React.js and Vite** during development.
+
+The PostgreSQL database is hosted remotely on **Neon**, allowing the application to use a managed cloud database while keeping sensitive credentials outside the source code.
+
+## ✨ Key Features
+
+* **Interactive Frontend:** Built with React.js, Tailwind CSS, Lucide Icons, and internationalization (i18n).
+* **Smart Dashboard:** Real-time inventory status, low-stock alerts, stock metrics, and movement history.
+* **AI Agent Assistant:** AI-powered inventory analysis and stock replenishment recommendations based on real-time database queries.
+* **Robust Backend:** Asynchronous FastAPI endpoints, Pydantic validation, and PostgreSQL integration.
+* **Service-Repository Architecture:** Separation between API routes, business logic, and data access layers.
+* **JWT Authentication:** Secure authentication and authorization system.
+* **PostgreSQL on Neon:** Cloud-hosted PostgreSQL database used as the application's persistent data layer.
+* **Dockerized Backend:** FastAPI backend configured to run inside a Docker container.
+* **Automated Testing:** Test suite using Pytest and coverage analysis.
 
 ---
 
-# ⚙️ Configuration
+# ⚙️ Configuration & Environment
 
-This project uses environment variables to manage database connections and security settings.
+The application uses environment variables to manage database connections and security settings.
 
-## 1. Create a `.env` file in the root directory
+Sensitive credentials such as the database connection string and application secret key are **not committed to the repository**.
 
-## 2. Add the following variables
+## 1. Create the `.env` file
 
-| Variable       | Description                  | Example                                  |
-| :------------- | :--------------------------- | :--------------------------------------- |
-| `DATABASE_URL` | PostgreSQL connection string | `postgresql://user:pass@db:5432/db_name` |
-| `SECRET_KEY`   | Secret key for JWT/Security  | `your_super_secret_key_here`             |
+Create a `.env` file in the root directory:
 
-> **Note:** The `db` hostname in `DATABASE_URL` is used because the API and Database run inside the same Docker network.
+```env
+DATABASE_URL=postgresql://user:password@your-neon-host/your-database
+SECRET_KEY=your_super_secret_key_here
+```
+
+> **Note:** `DATABASE_URL` should contain the PostgreSQL connection string provided by Neon.
+
+The `.env` file should remain local and must not be committed to Git.
+
+A typical `.gitignore` configuration should include:
+
+```gitignore
+.env
+```
+
+The application reads these environment variables when the FastAPI backend starts.
 
 ---
 
-# 🐳 Quick Start with Docker
+# 🐳 Backend with Docker
 
-The entire ecosystem is containerized. To start the database and run the FastAPI server:
+The FastAPI backend is containerized using **Docker and Docker Compose**.
+
+From the root directory of the project, start the backend with:
+
+```bash
+docker compose up -d
+```
+
+To rebuild the backend after making changes to the Docker configuration or dependencies:
 
 ```bash
 docker compose up --build -d
 ```
 
-Once running, access the interactive API documentation (Swagger UI):
+The API will be available at:
 
-```text
-http://localhost:8000/docs
+* 📑 **Interactive API Documentation (Swagger UI):** http://localhost:8000/docs
+
+To stop the Docker services:
+
+```bash
+docker compose down
 ```
 
 ---
 
-# 🧪 Testing Suite & Quality Assurance
+# 💻 Frontend
 
-The test suite uses **Pytest** to simulate full application workflows without affecting the production database.
+The frontend is developed with **React.js and Vite** and currently runs locally rather than inside Docker.
 
-We maintain an **81% code coverage threshold**.
+Navigate to the frontend directory:
 
-## Run tests inside the container
+```bash
+cd frontend
+```
+
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The frontend will normally be available at:
+
+* 💻 **Web Application:** http://localhost:5173
+
+The frontend communicates with the FastAPI backend through its REST API.
+
+---
+
+# 🧪 Testing & Quality Assurance
+
+The project includes an automated test suite using **Pytest** to validate application workflows.
+
+Tests can be executed inside the API container:
 
 ```bash
 docker compose exec api pytest -v
 ```
 
-## Generate coverage report summary
+To generate a test coverage report:
 
 ```bash
 docker compose exec api pytest --cov=app
-```
-
----
-
-# 🛠️ Utility Scripts
-
-To facilitate testing and data intelligence, the project includes:
-
-* `seed_data.py`
-  Automatically populates the database with mock products and stock movements.
-
-* `stock_analysis.py`
-  Uses **Pandas** to calculate sales velocity and predict when stock will run out based on recent history.
-
-## Run the analysis inside the container
-
-```bash
-docker compose exec api python stock_analysis.py
 ```
 
 ---
 
 # 🇪🇸 Versión en Español
 
-Un sistema inteligente y profesional de gestión de inventarios diseñado para el comercio electrónico, desarrollado con **FastAPI**, **PostgreSQL** y **Pandas**.
+LogiStock Aragón es un sistema inteligente e integral (**Full-Stack**) de gestión de inventarios para comercio electrónico, desarrollado con **FastAPI, PostgreSQL, React.js y un Agente de IA Integrado**.
 
-Este proyecto implementa una arquitectura escalable utilizando el patrón **Service-Repository**, autenticación segura, inteligencia de datos para la predicción de stock y una suite de pruebas automatizadas completamente contenedorizada con **Docker**.
+El proyecto utiliza una arquitectura escalable basada en el patrón **Service-Repository**, autenticación segura mediante **JWT**, un panel de control interactivo y un motor de recomendación de stock impulsado por Inteligencia Artificial.
+
+El backend está contenedorizado mediante **Docker**, mientras que el frontend se ejecuta localmente utilizando **React.js y Vite** durante el desarrollo.
+
+La base de datos PostgreSQL está alojada en la nube mediante **Neon**.
+
+## ✨ Características Principales
+
+* **Frontend Interactivo:** Desarrollado con React.js, Tailwind CSS, Lucide Icons y soporte multi-idioma mediante i18n.
+* **Panel de Control Inteligente:** Estado del inventario en tiempo real, alertas de stock bajo, métricas e historial de movimientos.
+* **Agente de IA:** Análisis inteligente del inventario y recomendaciones de reposición basadas en consultas en tiempo real a la base de datos.
+* **Backend Robusto:** Endpoints asíncronos con FastAPI, validaciones mediante Pydantic e integración con PostgreSQL.
+* **Arquitectura Service-Repository:** Separación entre rutas de API, lógica de negocio y acceso a datos.
+* **Autenticación JWT:** Sistema seguro de autenticación y autorización.
+* **PostgreSQL en Neon:** Base de datos PostgreSQL alojada en la nube mediante Neon.
+* **Backend con Docker:** API de FastAPI ejecutada dentro de un contenedor Docker.
+* **Pruebas Automatizadas:** Suite de pruebas utilizando Pytest y análisis de cobertura.
 
 ---
 
 # ⚙️ Configuración
 
-Este proyecto utiliza variables de entorno para gestionar la conexión a la base de datos y la seguridad.
+La aplicación utiliza variables de entorno para gestionar las conexiones a la base de datos y las configuraciones de seguridad.
 
-## 1. Crear un archivo `.env` en la raíz del proyecto
+Las credenciales sensibles, como la conexión a PostgreSQL y la clave secreta de la aplicación, **no forman parte del código fuente ni se almacenan en el repositorio**.
 
-## 2. Añadir las siguientes variables
+## 1. Crear el archivo `.env`
 
-| Variable       | Descripción                      | Ejemplo                                  |
-| :------------- | :------------------------------- | :--------------------------------------- |
-| `DATABASE_URL` | Cadena de conexión PostgreSQL    | `postgresql://user:pass@db:5432/db_name` |
-| `SECRET_KEY`   | Clave secreta para JWT/Seguridad | `tu_clave_secreta_aqui`                  |
+Crea un archivo `.env` en la raíz del proyecto:
 
-> **Nota:** El hostname `db` en la URL se utiliza porque la API y la base de datos corren dentro de la misma red de Docker.
+```env
+DATABASE_URL=postgresql://user:password@your-neon-host/your-database
+SECRET_KEY=tu_clave_secreta_aqui
+```
+
+> **Nota:** `DATABASE_URL` debe contener la cadena de conexión PostgreSQL proporcionada por Neon.
+
+El archivo `.env` debe mantenerse fuera del control de versiones:
+
+```gitignore
+.env
+```
 
 ---
 
-# 🐳 Inicio Rápido con Docker
+# 🐳 Backend con Docker
 
-Todo el ecosistema está contenedorizado. Para levantar la base de datos y ejecutar el servidor FastAPI:
+El backend desarrollado con FastAPI está contenedorizado mediante **Docker y Docker Compose**.
+
+Desde la carpeta raíz del proyecto:
+
+```bash
+docker compose up -d
+```
+
+Para reconstruir el contenedor:
 
 ```bash
 docker compose up --build -d
 ```
 
-Una vez en ejecución, puedes acceder a la documentación interactiva de la API (Swagger UI):
+La documentación interactiva de la API estará disponible en:
 
-```text
-http://localhost:8000/docs
+* 📑 **Swagger UI:** http://localhost:8000/docs
+
+Para detener los servicios:
+
+```bash
+docker compose down
 ```
 
 ---
 
-# 🧪 Suite de Pruebas y Control de Calidad
+# 💻 Frontend
 
-La suite de pruebas utiliza **Pytest** para simular flujos completos de la aplicación sin afectar la base de datos de producción.
+El frontend está desarrollado con **React.js y Vite** y actualmente se ejecuta localmente, fuera de Docker.
 
-Se mantiene un umbral de **81% de cobertura de código**.
-
-## Ejecutar pruebas dentro del contenedor
+Accede a la carpeta del frontend:
 
 ```bash
-docker compose exec api pytest -v
+cd frontend
 ```
 
-## Verificar el resumen de cobertura
+Instala las dependencias:
 
 ```bash
-docker compose exec api pytest --cov=app
+npm install
 ```
 
----
-
-# 🛠️ Scripts de Utilidad
-
-Para facilitar las pruebas y el análisis de datos, el proyecto incluye:
-
-* `seed_data.py`
-  Puebla automáticamente la base de datos con productos y movimientos de stock ficticios.
-
-* `stock_analysis.py`
-  Utiliza **Pandas** para calcular la velocidad de ventas y predecir cuándo se agotará el stock basándose en el historial reciente.
-
-## Ejecutar el análisis dentro del contenedor
+Inicia el servidor de desarrollo:
 
 ```bash
-docker compose exec api python stock_analysis.py
+npm run dev
 ```
+
+El frontend estará normalmente disponible en:
+
+* 💻 **Aplicación Web:** http://localhost:5173
+
+El frontend se comunica con el backend mediante la API REST de FastAPI.
 
 ---
 
 # 🗺️ Project Architecture Blueprint / Estructura del Proyecto
 
-```plaintext
-app/
-├── constants.py       # Global configurations / Configuraciones globales
-├── database.py        # Database initialization / Inicialización de la base de datos
-├── main.py            # API entry point / Punto de entrada de la API
-├── models.py          # SQLAlchemy models / Modelos de la Base de Datos
-├── schemas.py         # Pydantic validation / Validación de Datos
-├── repositories/      # Data Access Layer / Capa de Acceso a Datos
-│   ├── auth_repo.py
-│   └── inventory_repo.py
-├── services/          # Business Logic & Pandas / Lógica de Negocio y Pandas
-│   ├── auth_service.py
-│   └── inventory_service.py
-└── routes/            # API Routes / Endpoints
-    ├── auth.py
-    └── inventory.py
+```text
+LogiStock-Aragon/
+│
+├── frontend/                  # React.js + Vite Web Application
+│   ├── src/
+│   │   ├── components/        # UI Components, Drawers, Modals, Sidebar
+│   │   ├── pages/             # Dashboard, Products, Movements
+│   │   └── services/          # Axios API integrations
+│
+├── app/                       # FastAPI Backend Application
+│   ├── constants.py           # Global configurations
+│   ├── database.py            # Database connection
+│   ├── main.py                # API entry point
+│   ├── models.py              # SQLAlchemy models
+│   ├── schemas.py             # Pydantic schemas and validation
+│   │
+│   ├── repositories/           # Data Access Layer
+│   ├── services/               # Business Logic & AI Agent Integration
+│   └── routes/                 # API Routes / Endpoints
+│
+├── docker-compose.yml          # Backend container orchestration
+├── .env                        # Environment variables (not committed)
+├── .gitignore                  # Git ignore rules
+└── README.md                   # Project documentation
 ```
+
+---
+
+# 🏗️ Arquitectura
+
+La aplicación sigue el patrón **Service-Repository**, separando las responsabilidades para facilitar el mantenimiento, las pruebas y la escalabilidad del backend.
+
+```text
+                    ┌─────────────────────┐
+                    │      React.js       │
+                    │   Frontend / Vite   │
+                    │    Desarrollo       │
+                    └──────────┬──────────┘
+                               │
+                               │ HTTP / REST API
+                               ▼
+                    ┌─────────────────────┐
+                    │       FastAPI       │
+                    │       Backend       │
+                    │       Docker        │
+                    └──────────┬──────────┘
+                               │
+                               │ DATABASE_URL
+                               ▼
+                    ┌─────────────────────┐
+                    │        Neon         │
+                    │     PostgreSQL      │
+                    │       Cloud         │
+                    └─────────────────────┘
+```
+
+### Arquitectura del Backend
+
+```text
+                    ┌─────────────────────┐
+                    │       Routes        │
+                    │    API Endpoints    │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │      Services       │
+                    │   Lógica de negocio │
+                    │    + Agente IA      │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │    Repositories     │
+                    │   Acceso a datos    │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │        Neon         │
+                    │     PostgreSQL      │
+                    └─────────────────────┘
+```
+
+Esta separación mantiene independientes la **capa de API**, la **lógica de negocio** y el **acceso a datos**, facilitando el mantenimiento y permitiendo que cada componente evolucione de forma independiente.
+
+---
+
+# 🛠️ Stack Tecnológico
+
+| Categoría                     | Tecnología                 |
+| ----------------------------- | -------------------------- |
+| Backend                       | FastAPI                    |
+| Lenguaje                      | Python                     |
+| Frontend                      | React.js                   |
+| Build Tool                    | Vite                       |
+| Estilos                       | Tailwind CSS               |
+| Iconos                        | Lucide Icons               |
+| Base de Datos                 | PostgreSQL                 |
+| Hosting de Base de Datos      | Neon                       |
+| ORM                           | SQLAlchemy                 |
+| Validación                    | Pydantic                   |
+| Autenticación                 | JWT                        |
+| Inteligencia Artificial       | AI Agent                   |
+| Cliente API                   | Axios                      |
+| Testing                       | Pytest                     |
+| Contenedorización del Backend | Docker                     |
+| Orquestación                  | Docker Compose             |
+| Arquitectura                  | Service-Repository Pattern |
+
+---
+
+# 🔐 Seguridad
+
+La configuración sensible de la aplicación se gestiona mediante **variables de entorno**.
+
+La siguiente información **no se incluye en el repositorio**:
+
+* Credenciales de PostgreSQL.
+* Cadena de conexión de la base de datos Neon.
+* Clave secreta utilizada para JWT.
+* Otras credenciales y secretos de la aplicación.
+
+El archivo `.env` está excluido del control de versiones mediante `.gitignore`.
+
+De esta forma, las credenciales permanecen separadas del código fuente y no se exponen en el repositorio público.
+
+---
+
+# 🎯 Objetivos del Proyecto
+
+Los principales objetivos de LogiStock Aragón son:
+
+* Automatizar la gestión de inventarios.
+* Proporcionar una visión del stock en tiempo real.
+* Reducir el riesgo de falta de productos.
+* Facilitar las decisiones de compra mediante recomendaciones basadas en Inteligencia Artificial.
+* Mantener una arquitectura backend limpia y escalable.
+* Proporcionar una interfaz moderna y responsive.
+* Aplicar conocimientos prácticos de desarrollo Full-Stack, APIs, bases de datos, Docker, testing e Inteligencia Artificial.
+
+---
+
+# 🌎 English Version
+
+An English version of the project documentation is available below.
+
+> **LogiStock Aragón** is an intelligent full-stack inventory management system built with **FastAPI, PostgreSQL, React.js, and AI**.
+>
+> The project follows the **Service-Repository Pattern**, uses JWT authentication, a React.js frontend, a FastAPI backend running in Docker, and a PostgreSQL database hosted on Neon.
+>
+> The system includes inventory monitoring, stock alerts, movement tracking, AI-powered replenishment recommendations, automated testing, and a REST API.
+
+---
+
+# 👨‍💻 Autor
+
+**Vinicius Ferreira Colombo**
+
+Desarrollador Full-Stack enfocado en **Python, FastAPI, automatización, APIs, bases de datos e integración de Inteligencia Artificial**.
+
+---
+
+## 📄 Licencia
+
+Este proyecto ha sido desarrollado con fines educativos y como proyecto de portafolio.
+
