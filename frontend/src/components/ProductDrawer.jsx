@@ -51,6 +51,13 @@ export default function ProductDrawer({ isOpen, onClose, onSubmitForm, productTo
 
   if (!isOpen) return null;
 
+  const formatSKU = (val) => {
+    const clean = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    if (clean.length <= 3) return clean;
+    if (clean.length <= 5) return `${clean.slice(0, 3)}-${clean.slice(3)}`;
+    return `${clean.slice(0, 3)}-${clean.slice(3, 5)}-${clean.slice(5, 7)}`;
+  };
+
   const normalizeText = (str) => {
     return str
       .normalize('NFD')
@@ -131,14 +138,17 @@ export default function ProductDrawer({ isOpen, onClose, onSubmitForm, productTo
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === 'sku' ? formatSKU(value) : value,
+    }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmitForm({
       name: formData.name.trim(),
-      sku: formData.sku.trim().toUpperCase(),
+      sku: formatSKU(formData.sku),
       category_id: Number(formData.category_id),
       price: parseFloat(formData.price),
     });

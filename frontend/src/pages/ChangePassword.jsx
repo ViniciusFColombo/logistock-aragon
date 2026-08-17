@@ -98,7 +98,7 @@ function ChangePassword() {
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-hidden transition text-sm"
-              placeholder={t('change_password.placeholder_current')}
+              placeholder={t('change_password.label_current')}
               required
             />
           </div>
@@ -111,7 +111,7 @@ function ChangePassword() {
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-hidden transition text-sm"
-              placeholder={t('change_password.placeholder_new')}
+              placeholder={t('change_password.label_new')}
               required
             />
           </div>
@@ -124,7 +124,7 @@ function ChangePassword() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-hidden transition text-sm"
-              placeholder={t('change_password.placeholder_confirm')}
+              placeholder={t('change_password.label_confirm')}
               required
             />
           </div>

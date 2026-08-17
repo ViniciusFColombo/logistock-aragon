@@ -15,7 +15,7 @@
     "dashboard": "Panel de Control",
     "products": "Productos",
     "movements": "Movimientos",
-    "register_user": "Registrar Usuario (Admin)",
+    "register_user": "Registrar Usuario",
     "logged_in_as": "Sesión iniciada como:",
     "logout": "Cerrar Sesión"
   },
@@ -45,14 +45,17 @@
     "status_critical": "Crítico",
     "status_healthy": "Estable",
     "runway_no_data": "Sin datos de previsión",
-    "days_left": "días restantes"
+    "days_left": "días restantes",
+    "updating": "Actualizando ...",
+    "loading_data": "Cargando datos de LogiStock Aragón...",
+    "agent": "Haz clic en una acción rápida a continuación o escribe una consulta para activar el agente."
   },
 
   "movements": {
     "title": "Historial de Movimientos",
     "subtitle": "Control logístico, auditoría y análisis de inventario en tiempo real.",
     "new_btn": "Nueva Operación",
-    "pandas_title": "Alertas del Motor Predictivo (Pandas)",
+    "pandas_title": "Alertas del Motor Predictivo",
     "no_alerts": "No hay alertas críticas de stock según el análisis de ventas diarias.",
     "alert_critical": "El producto {{name}} tiene una alta velocidad de salida. Previsión de agotarse en {{days}} días.",
     "flow_summary": "Flujo Mensual",
@@ -92,28 +95,36 @@
     "modal_btn_confirm": "Confirmar y Guardar",
     "modal_btn_cancel": "Volver",
     "msg_success": "¡Operación registrada con éxito!",
-    "new_stock_label": "Nuevo Stock Resultante"
+    "new_stock_label": "Nuevo Stock Resultante",
+    "btn_accept": "Aceptar",
+    "error_title": "Error al Registrar",
+    "btn_try_again": "Volver a Intentar"
   },
 
   "register": {
     "title": "Nuevo Empleado",
     "subtitle": "Área Exclusiva del Administrador",
-    "full_name": "Nombre Completo",
-    "email": "Correo Electrónico Corporativo",
-    "password": "Contraseña Temporal",
-    "role": "Nivel de Acceso (Rol)",
+    "label_name": "Nombre Completo",
+    "label_email": "Correo Electrónico Corporativo",
+    "label_password": "Contraseña Temporal",
+    "label_role": "Nivel de Acceso",
+    "role_operator": "Operador",
+    "role_admin": "Administrador",
     "btn_register": "Registrar Empleado",
-    "btn_cancel": "Cancelar y Volver"
+    "btn_cancel": "Cancelar y Volver",
+    "success_message": "¡Usuario registrado con éxito!",
+    "btn_registering": "Usuario registrado, por favor espere..."
   },
   
   "change_password": {
     "title": "Cambiar Tu Contraseña",
     "subtitle": "Este es tu primer inicio de sesión. Debes actualizar tu contraseña para continuar.",
-    "current_password": "Contraseña Actual (Temporal)",
-    "new_password": "Nueva Contraseña",
-    "confirm_password": "Confirmar Nueva Contraseña",
+    "label_current": "Contraseña Actual (Temporal)",
+    "label_new": "Nueva Contraseña",
+    "label_confirm": "Confirmar Nueva Contraseña",
     "btn_update": "Actualizar Contraseña",
-    "loading": "Actualizando..."
+    "btn_updating": "Actualizando...",
+    "success_message": "Contraseña cambiada correctamente, redireccionando..."
   },
 
   "products": {

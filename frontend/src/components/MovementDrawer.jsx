@@ -15,15 +15,29 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
   const [submitting, setSubmitting] = useState(false);
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [txStatus, setTxStatus] = useState('idle'); // 'idle' | 'success' | 'error'
+  const [txErrorMessage, setTxErrorMessage] = useState('');
 
   // --- SKU Normalization Auxiliary Function ---
-  const formatSKU = (input) => {
-    const clean = input.toUpperCase().replace(/[^A-Z0-9]/g, '');
-    const match = clean.match(/^([A-Z]{3})([A-Z]{2})(\d+)$/);
-    if (match) {
-      return `${match[1]}-${match[2]}-${match[3]}`;
+  const formatSKU = (val) => {
+    const clean = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    if (clean.length <= 3) return clean;
+    if (clean.length <= 5) return `${clean.slice(0, 3)}-${clean.slice(3)}`;
+    return `${clean.slice(0, 3)}-${clean.slice(3, 5)}-${clean.slice(5, 7)}`;
+  };
+
+  const handleSearchInputChange = (e) => {
+    const val = e.target.value;
+    if (!val) {
+      setSearchQuery('');
+      return;
     }
-    return clean;
+
+    if (/^\d/.test(val)) {
+      setSearchQuery(val.replace(/\D/g, ''));
+    } else {
+      setSearchQuery(formatSKU(val));
+    }
   };
 
   // --- SMART PRODUCT SEARCH ---
@@ -38,22 +52,11 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
 
     try {
       let data = null;
-
       if (!isNaN(rawTerm)) {
-        try {
-          data = await inventoryService.getProductById(Number(rawTerm));
-        } catch (err) {
-          data = await inventoryService.getProductBySku(rawTerm);
-        }
+        data = await inventoryService.getProductById(Number(rawTerm));
       } else {
-        const formattedSKU = formatSKU(rawTerm);
-        try {
-          data = await inventoryService.getProductBySku(formattedSKU);
-        } catch (err) {
-          data = await inventoryService.getProductBySku(rawTerm.toUpperCase());
-        }
+        data = await inventoryService.getProductBySku(rawTerm);
       }
-
       setFoundProduct(data);
     } catch (err) {
       setSearchError(t('movements.product_not_found', 'Producto no encontrado.'));
@@ -79,6 +82,8 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
     setSearchError('');
     setQuantity(1);
     setMovementType('in');
+    setTxStatus('idle');
+    setTxErrorMessage('');
   };
 
   const handleClose = () => {
@@ -88,6 +93,7 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
 
   const handleConfirmTransaction = async () => {
     setSubmitting(true);
+    setTxErrorMessage('');
     try {
       await inventoryService.createTransaction({
         product_id: foundProduct.id,
@@ -95,15 +101,23 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
         movement_type: movementType
       });
 
-      setIsConfirmModalOpen(false);
-      resetForm();
-      onSuccess();
+      // Updates the table in the parent component without closing the interface.
+      if (onSuccess) onSuccess();
+      
+      // Set the success status to render the confirmation.
+      setTxStatus('success');
     } catch (error) {
       console.error("Failed to create transaction:", error);
-      alert(error.response?.data?.detail || "Error processing transaction");
+      setTxStatus('error');
+      setTxErrorMessage(error.response?.data?.detail || "Error processing transaction");
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleAcceptSuccess = () => {
+    setIsConfirmModalOpen(false);
+    handleClose();
   };
 
   if (!isOpen) return null;
@@ -127,7 +141,13 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
               </button>
             </div>
 
-            <form onSubmit={(e) => { e.preventDefault(); if(isFormValid) setIsConfirmModalOpen(true); }} className="space-y-6">
+            <form 
+              onSubmit={(e) => { 
+                e.preventDefault(); 
+                if (isFormValid && txStatus === 'idle') setIsConfirmModalOpen(true); 
+              }} 
+              className="space-y-6"
+            >
               {/* SEARCH */}
               <div>
                 <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -137,7 +157,7 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={handleSearchInputChange}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -159,7 +179,7 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
                 {searchError && <p className="text-xs text-red-400 mt-2">{searchError}</p>}
               </div>
 
-              {/* PRODUCT DETAILS (Current data only) */}
+              {/* PRODUCT DETAILS */}
               {foundProduct && (
                 <div className="bg-slate-950/60 border border-slate-800 rounded-lg p-4 space-y-3">
                   <div>
@@ -259,7 +279,9 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
             </button>
             <button
               type="button"
-              onClick={() => setIsConfirmModalOpen(true)}
+              onClick={() => {
+                if (isFormValid) setIsConfirmModalOpen(true);
+              }}
               disabled={!isFormValid}
               className="px-4 py-2 bg-indigo-600 disabled:opacity-40 text-white rounded-lg text-sm font-medium transition"
             >
@@ -269,38 +291,93 @@ export default function MovementDrawer({ isOpen, onClose, onSuccess }) {
         </div>
       </div>
 
-      {/* CONFIRMATION MODAL */}
+      {/* CONFIRMATION & FEEDBACK MODAL */}
       {isConfirmModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-60 flex items-center justify-center p-4">
           <div className="bg-slate-900 border border-slate-800 rounded-xl p-6 max-w-sm w-full shadow-2xl space-y-4">
-            <h3 className="text-lg font-bold text-slate-100">{t('movements.modal_title', 'Confirmar Operación')}</h3>
-            <p className="text-sm text-slate-400">{t('movements.modal_desc', '¿Está seguro de realizar este movimiento?')}</p>
             
-            <div className="bg-slate-950 p-3 rounded-lg text-xs space-y-1 font-mono text-slate-300 border border-slate-800">
-              <p><span className="text-slate-500">Producto:</span> {foundProduct?.name}</p>
-              <p><span className="text-slate-500">Tipo:</span> <strong className={movementType === 'in' ? 'text-emerald-400' : 'text-red-400'}>{movementType.toUpperCase()}</strong></p>
-              <p><span className="text-slate-500">Cantidad:</span> {quantity} u</p>
-              <p><span className="text-slate-500">Total:</span> €{totalOperationValue}</p>
-            </div>
+            {/* STATE 1: CONFIRMATION (IDLE) */}
+            {txStatus === 'idle' && (
+              <>
+                <h3 className="text-lg font-bold text-slate-100">{t('movements.modal_title', 'Confirmar Operación')}</h3>
+                <p className="text-sm text-slate-400">{t('movements.modal_desc', '¿Está seguro de realizar este movimiento?')}</p>
+                
+                <div className="bg-slate-950 p-3 rounded-lg text-xs space-y-1 font-mono text-slate-300 border border-slate-800">
+                  <p><span className="text-slate-500">Producto:</span> {foundProduct?.name}</p>
+                  <p><span className="text-slate-500">Tipo:</span> <strong className={movementType === 'in' ? 'text-emerald-400' : 'text-red-400'}>{movementType.toUpperCase()}</strong></p>
+                  <p><span className="text-slate-500">Cantidad:</span> {quantity} u</p>
+                  <p><span className="text-slate-500">Total:</span> €{totalOperationValue}</p>
+                </div>
 
-            <div className="flex justify-end gap-3 pt-2">
-              <button 
-                type="button" 
-                onClick={() => setIsConfirmModalOpen(false)} 
-                disabled={submitting} 
-                className="px-3 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold transition"
-              >
-                {t('movements.modal_btn_cancel', 'Volver')}
-              </button>
-              <button 
-                type="button" 
-                onClick={handleConfirmTransaction} 
-                disabled={submitting} 
-                className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-xs font-semibold transition"
-              >
-                {submitting ? '...' : t('movements.modal_btn_confirm', 'Confirmar y Guardar')}
-              </button>
-            </div>
+                <div className="flex justify-end gap-3 pt-2">
+                  <button 
+                    type="button" 
+                    onClick={() => setIsConfirmModalOpen(false)} 
+                    disabled={submitting} 
+                    className="px-3 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold transition"
+                  >
+                    {t('movements.modal_btn_cancel', 'Volver')}
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={handleConfirmTransaction} 
+                    disabled={submitting} 
+                    className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold transition flex items-center gap-2"
+                  >
+                    {submitting ? '...' : t('movements.modal_btn_confirm', 'Confirmar y Guardar')}
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* STATE 2: SUCCESS */}
+            {txStatus === 'success' && (
+              <div className="text-center space-y-4 py-2">
+                <div className="w-12 h-12 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+                  ✓
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-100">
+                    {t('movements.msg_success', '¡Operación Registrada!')}
+                  </h3>
+                  <p className="text-xs text-slate-400 mt-1">
+                    {t('movements.msg_success', 'El movimiento de stock se ha procesado con éxito.')}
+                  </p>
+                </div>
+                <button 
+                  type="button" 
+                  onClick={handleAcceptSuccess} 
+                  className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold transition mt-2"
+                >
+                  {t('movements.btn_accept', 'Aceptar')}
+                </button>
+              </div>
+            )}
+
+            {/* STATE 3: ERROR */}
+            {txStatus === 'error' && (
+              <div className="text-center space-y-4 py-2">
+                <div className="w-12 h-12 bg-red-500/20 border border-red-500/40 text-red-400 rounded-full flex items-center justify-center mx-auto text-2xl font-bold">
+                  ✕
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-slate-100">
+                    {t('movements.error_title', 'Error al Registrar')}
+                  </h3>
+                  <p className="text-xs text-red-400 mt-2 bg-red-950/40 border border-red-900/50 p-2 rounded text-left font-mono">
+                    {txErrorMessage}
+                  </p>
+                </div>
+                <button 
+                  type="button" 
+                  onClick={() => setTxStatus('idle')} 
+                  className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-semibold transition mt-2"
+                >
+                  {t('movements.btn_try_again', 'Volver a Intentar')}
+                </button>
+              </div>
+            )}
+
           </div>
         </div>
       )}

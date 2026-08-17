@@ -15,7 +15,7 @@
     "dashboard": "Dashboard",
     "products": "Products",
     "movements": "Movements",
-    "register_user": "Register User (Admin)",
+    "register_user": "Register User",
     "logged_in_as": "Logged in as:",
     "logout": "Logout / Sign Out"
   },
@@ -45,14 +45,17 @@
     "status_critical": "Critical",
     "status_healthy": "Healthy",
     "runway_no_data": "No runway data",
-    "days_left": "days left"
+    "days_left": "days left",
+    "updating": "Updating ...",
+    "loading_data": "Loading LogiStock Aragón data...",
+    "agent": "Click a quick action below or type a query to prompt the agent."
   },
 
   "movements": {
     "title": "Stock Movements History",
     "subtitle": "Logistics control, auditing, and real-time inventory analysis.",
     "new_btn": "New Operation",
-    "pandas_title": "Predictive Engine Alerts (Pandas)",
+    "pandas_title": "Predictive Engine Alerts",
     "no_alerts": "No critical stock alerts based on daily sales analysis.",
     "alert_critical": "The product {{name}} has a high output velocity. Expected to run out in {{days}} days.",
     "flow_summary": "Monthly Flow (U)",
@@ -90,28 +93,36 @@
     "modal_btn_confirm": "Confirm & Save",
     "modal_btn_cancel": "Go Back",
     "msg_success": "Operation registered successfully!",
-    "new_stock_label": "New Resulting Stock"
+    "new_stock_label": "New Resulting Stock",
+    "btn_accept": "Accept",
+    "error_title": "Error during registration",
+    "btn_try_again": "Try Again"
   },
 
   "register": {
     "title": "New Employee",
     "subtitle": "Administrator Exclusive Area",
-    "full_name": "Full Name",
-    "email": "Corporate Email",
-    "password": "Temporary Password",
-    "role": "Access Level (Role)",
+    "label_name": "Full Name",
+    "label_email": "Corporate Email",
+    "label_password": "Temporary Password",
+    "label_role": "Access Level",
+    "role_operator": "Operator",
+    "role_admin": "Administrator",
     "btn_register": "Register Employee",
-    "btn_cancel": "Cancel & Return"
+    "btn_cancel": "Cancel & Return",
+    "success_message": "User successfully registered!",
+    "btn_registering": "Registering user, please wait..."
   },
 
   "change_password": {
     "title": "Change Your Password",
     "subtitle": "This is your first login. You must update your password to continue.",
-    "current_password": "Current (Temporary) Password",
-    "new_password": "New Password",
-    "confirm_password": "Confirm New Password",
+    "label_current": "Current (Temporary) Password",
+    "label_new": "New Password",
+    "label_confirm": "Confirm New Password",
     "btn_update": "Update Password",
-    "loading": "Updating..."
+    "btn_updating": "Updating...",
+    "success_message": "Password altered with success, redirecting..."
   },
 
   "products": {

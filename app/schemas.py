@@ -1,8 +1,9 @@
-from pydantic import BaseModel, Field, ConfigDict, StringConstraints, EmailStr
+from pydantic import BaseModel, Field, ConfigDict, StringConstraints, EmailStr, field_validator
 from typing import Annotated, Optional
 from datetime import datetime
 from .constants import MovementType
-from .models import UserRole 
+from .models import UserRole
+import re
 
 # ==========================================
 # PRODUCTS
@@ -14,6 +15,16 @@ class ProductBase(BaseModel):
     category_id: int = Field(..., description="ID da Categoria associada")
     price: float = Field(..., gt=0, json_schema_extra={"examples": [150.50]})
     stock_quantity: int = Field(default=0, ge=0, json_schema_extra={"examples": [10]})
+
+    @field_validator('sku')
+    @classmethod
+    def format_and_validate_sku(cls, v: str) -> str:
+        clean = re.sub(r'[^a-zA-Z0-9]', '', v).upper()
+        if len(clean) <= 3:
+            return clean
+        elif len(clean) <= 5:
+            return f"{clean[:3]}-{clean[3:]}"
+        return f"{clean[:3]}-{clean[3:5]}-{clean[5:7]}"
 
 class ProductCreate(ProductBase):
     pass

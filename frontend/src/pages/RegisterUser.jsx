@@ -84,7 +84,7 @@ function RegisterUser() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-hidden transition text-sm"
-              placeholder={t('register.placeholder_name')}
+              placeholder={t('register.label_name')}
               required
             />
           </div>
@@ -110,7 +110,7 @@ function RegisterUser() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full rounded-lg bg-slate-900 border border-slate-700 px-4 py-2.5 text-slate-100 placeholder:text-slate-500 focus:border-emerald-500 focus:outline-hidden transition text-sm"
-              placeholder={t('register.placeholder_password')}
+              placeholder={t('register.label_password')}
               required
             />
           </div>
