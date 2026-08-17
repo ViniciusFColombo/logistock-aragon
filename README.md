@@ -1,10 +1,10 @@
 # LogiStock Aragón 📦🚀
 
-**Sistema inteligente de gestão de inventários para e-commerce**, desenvolvido com **FastAPI, PostgreSQL, React.js e Inteligência Artificial**.
+**Sistema inteligente de gestión de inventario para comercio electrónico**, desarrollado con **FastAPI, PostgreSQL, React.js e Inteligencia Artificial**.
 
-O projeto utiliza uma arquitetura baseada no padrão **Service-Repository**, autenticação com **JWT**, dashboard interativo, análise inteligente de estoque e integração com um banco de dados PostgreSQL hospedado na nuvem através do **Neon**.
+El proyecto utiliza una arquitectura basada en el patrón **Repositorio de Servicios**, autenticación con **JWT**, un panel interactivo, análisis inteligente de inventario e integración con una base de datos PostgreSQL alojada en la nube mediante **Neon**.
 
-O backend é executado em **Docker**, enquanto o frontend é desenvolvido com **React.js + Vite** e executado localmente durante o desenvolvimento.
+El backend se ejecuta en **Docker**, mientras que el frontend se desarrolla con **React.js + Vite** y se ejecuta localmente durante el desarrollo.
 
 ---
 
